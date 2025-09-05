@@ -1,4 +1,12 @@
-import { addComponent, addImports, addPlugin, addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
+import {
+  addComponent,
+  addImports,
+  addPlugin,
+  addServerHandler,
+  createResolver,
+  defineNuxtModule,
+  installModule,
+} from '@nuxt/kit'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -6,6 +14,13 @@ import { join } from 'node:path'
 export interface ModuleOptions {
   // Module Control
   enabled?: boolean
+
+  /**
+   * Enable or disable `@nuxt/ui` module
+   * @defaultValue `true`
+   * @link https://ui.nuxt.com/docs/getting-started/installation/nuxt
+   */
+  ui?: boolean
 
   // Linear Integration
   linearApiKey?: string
@@ -26,7 +41,6 @@ export interface ModuleOptions {
 
   // Styling
   theme?: 'light' | 'dark' | 'auto'
-  customCSS?: string
 
   // Console Logs
   maxConsoleLogs?: number
@@ -43,6 +57,7 @@ export default defineNuxtModule<ModuleOptions>({
   // Default configuration options of the Nuxt module
   defaults: {
     enabled: true,
+    ui: true,
     autoShow: true,
     position: 'bottom-right',
     buttonColor: '#ef4444',
@@ -52,7 +67,7 @@ export default defineNuxtModule<ModuleOptions>({
     theme: 'auto',
     maxConsoleLogs: 50,
   },
-  setup(options, nuxt) {
+  async setup(options, nuxt) {
     // Early exit if module is disabled
     if (options.enabled === false) {
       console.info('[@lenne.tech/bug.lt] Module is disabled - skipping initialization')
@@ -71,6 +86,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Only add runtime config and components if module is enabled
     if (options.enabled !== false) {
+      // Install @nuxt/ui as dependency (if enabled)
+      if (options.ui !== false) {
+        await installModule('@nuxt/ui')
+      }
       // Add runtime config
       nuxt.options.runtimeConfig.public.bugLt = {
         ...options,

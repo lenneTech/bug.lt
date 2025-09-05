@@ -223,7 +223,6 @@ describe('Bug LT Module', () => {
       enableBrowserInfo: true,
       enableConsoleLogs: true,
       theme: 'auto',
-      customCSS: 'string',
       maxConsoleLogs: 100,
     }
 

@@ -96,7 +96,6 @@ export interface BugReportConfig {
   enableBrowserInfo?: boolean
   enableConsoleLogs?: boolean
   theme?: 'light' | 'dark' | 'auto'
-  customCSS?: string
   maxConsoleLogs?: number
 }
 

@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import type {
-  BugReportType,
-  BugReportPosition,
   BrowserInfo,
-  ConsoleLogEntry,
-  BugReportData,
-  LinearIssueData,
   BugReportConfig,
+  BugReportData,
+  BugReportPosition,
+  BugReportType,
+  ConsoleLogEntry,
+  LinearIssueData,
   UseBugReportReturn,
 } from '../src/runtime/types'
 
@@ -184,7 +184,6 @@ describe('Type Definitions', () => {
       enableBrowserInfo: true,
       enableConsoleLogs: true,
       theme: 'dark',
-      customCSS: '.custom { color: red; }',
       maxConsoleLogs: 100,
     }
 
@@ -197,8 +196,10 @@ describe('Type Definitions', () => {
     // This tests that the interface is properly defined
     // The actual implementation test is in composables test
     const mockReturn: UseBugReportReturn = {
-      openModal: async () => {},
-      submitBugReport: async () => {},
+      openModal: async () => {
+      },
+      submitBugReport: async () => {
+      },
       isSubmitting: { value: false } as any,
       error: { value: null } as any,
       previewScreenshot: { value: null } as any,

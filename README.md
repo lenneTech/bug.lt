@@ -32,10 +32,14 @@ Füge das Modul zu deiner `nuxt.config.ts` hinzu:
 
 ```typescript
 export default defineNuxtConfig({
-  modules: ['@lenne.tech/bug.lt'],
+  modules: [
+    '@lenne.tech/bug.lt'
+    // @nuxt/ui wird automatisch hinzugefügt
+  ],
   bug: {
     // Module Control
     enabled: true, // false deaktiviert das komplette Modul
+    ui: true, // false deaktiviert @nuxt/ui Installation
 
     // Linear Integration
     linearApiKey: process.env.LINEAR_API_KEY,
@@ -177,6 +181,8 @@ const {
 
 | Option              | Typ       | Standard                | Beschreibung                     |
 |---------------------|-----------|-------------------------|----------------------------------|
+| `enabled`           | `boolean` | `true`                  | Komplettes Modul aktivieren      |
+| `ui`                | `boolean` | `true`                  | @nuxt/ui Installation aktivieren |
 | `linearApiKey`      | `string`  | -                       | Linear API Key (erforderlich)    |
 | `linearTeamName`    | `string`  | -                       | Linear Team Name oder Key        |
 | `linearProjectName` | `string`  | -                       | Linear Projekt Name (optional)   |
@@ -196,7 +202,6 @@ const {
 - **Nuxt 4.0+**
 - **Linear API Key** mit write-Berechtigung
 - **Google Chrome 111+** für Screenshots
-- **@nuxt/ui** für UI-Komponenten
 
 ## Entwicklung
 
