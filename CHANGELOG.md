@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.0](https://github.com/lenneTech/bug.lt/compare/v1.0.2...v1.1.0) (2025-09-05)
+
+### 🚀 Features
+
+* add support for optional @nuxt/ui module and remove customCSS option ([7ae78df](https://github.com/lenneTech/bug.lt/commit/7ae78df32f375a51b3edd1ab5ba8854f09262d75))
+
+### ✅ Tests
+
+* update module tests to use async setup and add installModule mock ([167963d](https://github.com/lenneTech/bug.lt/commit/167963d0e09eb1d1f9f6bb006237c15a0e0a20ab))
+
 ## [1.0.2](https://github.com/lenneTech/bug.lt/compare/v1.0.1...v1.0.2) (2025-09-05)
 
 ### ♻️ Code Refactoring
