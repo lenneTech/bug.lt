@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.5](https://github.com/lenneTech/bug.lt/compare/v1.1.4...v1.1.5) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* enhance bug report submission with toast notifications for success and error feedback ([9c31eba](https://github.com/lenneTech/bug.lt/commit/9c31eba26bf966ba7dfd799bc3987d4270dead42))
+
 ## [1.1.4](https://github.com/lenneTech/bug.lt/compare/v1.1.3...v1.1.4) (2025-09-05)
 
 ### ♻️ Code Refactoring
