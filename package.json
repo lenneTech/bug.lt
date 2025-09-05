@@ -1,0 +1,87 @@
+{
+  "name": "@lenne.tech/bug.lt",
+  "version": "1.0.0",
+  "description": "A comprehensive Nuxt 4 module for bug reporting with Linear integration, screenshot capture, and detailed system information collection",
+  "author": "lenne.Tech <info@lenne.tech>",
+  "homepage": "https://github.com/lenneTech/bug-lt#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lenneTech/bug-lt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lenneTech/bug-lt/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "bug-reporting",
+    "linear",
+    "screenshot",
+    "error-tracking",
+    "issue-management",
+    "puppeteer"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "main": "./dist/module.mjs",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build build",
+    "dev": "npm run dev:prepare && nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@nuxt/kit": "4.1.0",
+    "nuxt-icon": "^1.0.0",
+    "puppeteer": "24.18.0",
+    "zod": "4.1.5"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "2.6.3",
+    "@nuxt/eslint-config": "1.9.0",
+    "@nuxt/module-builder": "1.0.2",
+    "@nuxt/schema": "4.1.0",
+    "@nuxt/test-utils": "3.19.2",
+    "@nuxt/ui": "3.3.3",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "11.0.5",
+    "@semantic-release/npm": "12.0.2",
+    "@types/node": "latest",
+    "changelogen": "0.6.2",
+    "conventional-changelog-conventionalcommits": "9.1.0",
+    "eslint": "9.34.0",
+    "happy-dom": "18.0.1",
+    "nuxt": "4.1.0",
+    "semantic-release": "24.2.7",
+    "typescript": "~5.9.2",
+    "vitest": "3.2.4",
+    "vue-tsc": "3.0.6"
+  }
+}
