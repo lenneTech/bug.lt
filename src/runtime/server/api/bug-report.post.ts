@@ -1,6 +1,7 @@
 import { createError, defineEventHandler, readBody } from 'h3'
 import { createLinearIssueFromBugReport } from '../../utils/linearApi'
 import type { BugReportConfig, BugReportData } from '../../types'
+import { useRuntimeConfig } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig()
