@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.1](https://github.com/lenneTech/bug.lt/compare/v1.1.0...v1.1.1) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* rename plugin.client.ts to bug-lt.ts and update plugin registration ([5d400b2](https://github.com/lenneTech/bug.lt/commit/5d400b23b4e99756444d61621b38de5fda1e0497))
+
 ## [1.1.0](https://github.com/lenneTech/bug.lt/compare/v1.0.2...v1.1.0) (2025-09-05)
 
 ### 🚀 Features
