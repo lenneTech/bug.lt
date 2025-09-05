@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.2](https://github.com/lenneTech/bug.lt/compare/v1.1.1...v1.1.2) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* streamline runtime configuration and plugin registration in module ([13880c4](https://github.com/lenneTech/bug.lt/commit/13880c455dcd810560f07f6a8072315de685f408))
+
 ## [1.1.1](https://github.com/lenneTech/bug.lt/compare/v1.1.0...v1.1.1) (2025-09-05)
 
 ### ♻️ Code Refactoring
