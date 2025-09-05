@@ -12,6 +12,7 @@ vi.mock('@nuxt/kit', () => ({
   createResolver: vi.fn().mockImplementation(() => ({
     resolve: vi.fn().mockImplementation(path => path),
   })),
+  installModule: vi.fn(),
 }))
 
 describe('Bug LT Module', () => {
@@ -28,6 +29,7 @@ describe('Bug LT Module', () => {
   it('should have correct default options', () => {
     expect(module.defaults).toEqual({
       enabled: true,
+      ui: true,
       autoShow: true,
       position: 'bottom-right',
       buttonColor: '#ef4444',
@@ -39,13 +41,14 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should register components correctly', () => {
+  it('should register components correctly', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
@@ -55,7 +58,7 @@ describe('Bug LT Module', () => {
       autoShow: true,
     }
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(addComponent).toHaveBeenCalledWith({
       name: 'BugReportButton',
@@ -68,19 +71,20 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should register composables correctly', () => {
+  it('should register composables correctly', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
     const mockOptions: ModuleOptions = {}
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(addImports).toHaveBeenCalledWith({
       name: 'useBugReport',
@@ -88,19 +92,20 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should register server handlers correctly', () => {
+  it('should register server handlers correctly', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
     const mockOptions: ModuleOptions = {}
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(addServerHandler).toHaveBeenCalledWith({
       route: '/api/bug-report',
@@ -115,30 +120,32 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should register plugin correctly', () => {
+  it('should register plugin correctly', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
     const mockOptions: ModuleOptions = {}
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(addPlugin).toHaveBeenCalledWith('./runtime/plugin.client')
   })
 
-  it('should configure runtime config correctly', () => {
+  it('should configure runtime config correctly', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
@@ -151,7 +158,7 @@ describe('Bug LT Module', () => {
       buttonColor: '#ff0000',
     }
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     // Public config should not expose sensitive data
     expect(mockNuxt.options.runtimeConfig.public.bugLt).toEqual({
@@ -167,13 +174,14 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should handle missing linear configuration', () => {
+  it('should handle missing linear configuration', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
@@ -182,7 +190,7 @@ describe('Bug LT Module', () => {
       position: 'bottom-left',
     }
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(mockNuxt.options.runtimeConfig.bugLt).toEqual({
       linearApiKey: undefined,
@@ -191,19 +199,20 @@ describe('Bug LT Module', () => {
     })
   })
 
-  it('should use createResolver to resolve file paths', () => {
+  it('should use createResolver to resolve file paths', async () => {
     const mockNuxt = {
       options: {
         runtimeConfig: {
           public: { bugLt: {} },
           bugLt: {},
         },
+        modules: [],
       },
     }
 
     const mockOptions: ModuleOptions = {}
 
-    module.setup(mockOptions, mockNuxt)
+    await module.setup(mockOptions, mockNuxt)
 
     expect(createResolver).toHaveBeenCalledWith(expect.any(String))
   })
