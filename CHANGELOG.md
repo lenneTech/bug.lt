@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.0.2](https://github.com/lenneTech/bug.lt/compare/v1.0.1...v1.0.2) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* reorder build step in release workflow for clarity ([b0c6d7a](https://github.com/lenneTech/bug.lt/commit/b0c6d7a9c7e62bca80325666f95341501b7b5351))
+* simplify release workflow by removing manual version input and unnecessary steps ([0f58eb3](https://github.com/lenneTech/bug.lt/commit/0f58eb39cd257d6ec4ce4dfcb8a01ea685afa76b))
+
 ## [1.0.1](https://github.com/lenneTech/bug.lt/compare/v1.0.0...v1.0.1) (2025-09-05)
 
 ### 🐛 Bug Fixes
