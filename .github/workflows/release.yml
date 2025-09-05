@@ -17,20 +17,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org/
 
-      - name: Enable Corepack
-        run: npm i -g --force corepack@latest && corepack enable
-
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: npm i
 
       - name: Build
         run: npm run prepack
 
       - name: Playground prepare
         run: npm run dev:prepare
+
+      - name: Lint
+        run: npm run lint
 
       - name: Test
         run: npm run test
