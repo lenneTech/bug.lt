@@ -129,6 +129,6 @@
   ],
   "preset": "conventionalcommits",
   "tagFormat": "v${version}",
-  "repositoryUrl": "https://github.com/lenneTech/bug-lt.git",
+  "repositoryUrl": "https://github.com/lenneTech/bug.lt.git",
   "debug": false
 }
