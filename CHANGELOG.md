@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.0.1](https://github.com/lenneTech/bug.lt/compare/v1.0.0...v1.0.1) (2025-09-05)
+
+### 🐛 Bug Fixes
+
+* remove unnecessary dist directory from release assets ([c715a39](https://github.com/lenneTech/bug.lt/commit/c715a3924ff67d820a216507b021b252f0171f36))
+
 ## 1.0.0 (2025-09-05)
 
 ### 🐛 Bug Fixes
