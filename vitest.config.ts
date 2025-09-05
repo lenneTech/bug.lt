@@ -22,6 +22,7 @@ export default defineConfig({
     alias: {
       '~': new URL('./', import.meta.url).pathname,
       '@': new URL('./', import.meta.url).pathname,
+      '#imports': new URL('./test/mocks/imports.ts', import.meta.url).pathname,
     },
   },
 })

@@ -15,7 +15,7 @@ vi.mock('h3', () => ({
   }),
 }))
 
-// Mock useRuntimeConfig
+// Mock runtime config
 let mockRuntimeConfig = {
   bugLt: {
     linearApiKey: 'test-api-key',
@@ -24,7 +24,10 @@ let mockRuntimeConfig = {
   },
 }
 
-global.useRuntimeConfig = vi.fn(() => mockRuntimeConfig)
+// Mock the imports file
+vi.mock('#imports', () => ({
+  useRuntimeConfig: vi.fn((event) => mockRuntimeConfig),
+}))
 
 // Mock Linear API
 vi.mock('../../../src/runtime/utils/linearApi', () => ({
