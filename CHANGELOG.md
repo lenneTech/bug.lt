@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.4](https://github.com/lenneTech/bug.lt/compare/v1.1.3...v1.1.4) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* simplify useRuntimeConfig mock implementation in tests ([3badb1d](https://github.com/lenneTech/bug.lt/commit/3badb1d53ee635a3fe7b8d8cf111f3b292122705))
+* update useRuntimeConfig usage in bug report handler and tests ([51e4352](https://github.com/lenneTech/bug.lt/commit/51e4352fab4302be4f7013898e89468b5895908a))
+* utilize useRuntimeConfig in bug report event handler ([3d875c0](https://github.com/lenneTech/bug.lt/commit/3d875c079c1258245e22c94f9910f5b9f2c7f977))
+
 ## [1.1.3](https://github.com/lenneTech/bug.lt/compare/v1.1.2...v1.1.3) (2025-09-05)
 
 ### ♻️ Code Refactoring
