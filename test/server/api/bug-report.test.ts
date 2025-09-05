@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createError, readBody } from 'h3'
 import bugReportHandler from '../../../src/runtime/server/api/bug-report.post'
 
@@ -26,7 +26,7 @@ let mockRuntimeConfig = {
 
 // Mock the imports file
 vi.mock('#imports', () => ({
-  useRuntimeConfig: vi.fn((event) => mockRuntimeConfig),
+  useRuntimeConfig: vi.fn(() => mockRuntimeConfig),
 }))
 
 // Mock Linear API
