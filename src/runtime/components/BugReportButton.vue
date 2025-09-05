@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useBugReport } from '../composables/useBugReport'
 import type { BugReportConfig } from '~/src/runtime/types'
 import iconPng from '../public/icon.png'
+import { useRuntimeConfig } from '#imports'
 
 interface Props {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { z } from 'zod'
+import { useRuntimeConfig } from '#imports'
 import type { AttachmentFile, BugReportConfig, BugReportData, BugReportType } from '../types'
 import { captureScreenshot as captureScreenshotUtil } from '../utils/screenshot'
 import { getBrowserInfo } from '../utils/browserInfo'
