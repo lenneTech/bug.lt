@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "A comprehensive Nuxt 4 module for bug reporting with Linear integration, screenshot capture, and detailed system information collection",
   "author": "lenne.Tech <info@lenne.tech>",
-  "homepage": "https://github.com/lenneTech/bug-lt#readme",
+  "homepage": "https://github.com/lenneTech/bug.lt#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lenneTech/bug-lt.git"
+    "url": "https://github.com/lenneTech/bug.lt.git"
   },
   "bugs": {
-    "url": "https://github.com/lenneTech/bug-lt/issues"
+    "url": "https://github.com/lenneTech/bug.lt/issues"
   },
   "keywords": [
     "nuxt",
