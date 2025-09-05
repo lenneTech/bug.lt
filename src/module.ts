@@ -84,67 +84,66 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
 
-    // Only add runtime config and components if module is enabled
-    if (options.enabled !== false) {
-      // Install @nuxt/ui as dependency (if enabled)
-      if (options.ui !== false) {
-        await installModule('@nuxt/ui')
-      }
-      // Add runtime config
-      nuxt.options.runtimeConfig.public.bugLt = {
-        ...options,
-        // Don't expose sensitive data to client
-        linearApiKey: undefined,
-      }
-
-      // Add server-side runtime config for sensitive data
-      nuxt.options.runtimeConfig.bugLt = {
-        linearApiKey: options.linearApiKey,
-        linearTeamName: options.linearTeamName,
-        linearProjectName: options.linearProjectName,
-      }
-
-      // Add plugin
-      addPlugin({
-        src: resolver.resolve('./runtime/plugins/bug-lt.ts'),
-        mode: 'client',
-      })
-
-      // Add components
-      addComponent({
-        name: 'BugReportButton',
-        filePath: resolver.resolve('./runtime/components/BugReportButton.vue'),
-      })
-
-      addComponent({
-        name: 'BugReportModal',
-        filePath: resolver.resolve('./runtime/components/BugReportModal.vue'),
-      })
-
-      addComponent({
-        name: 'BugIcon',
-        filePath: resolver.resolve('./runtime/components/BugIcon.vue'),
-      })
-
-      // Add composables
-      addImports({
-        name: 'useBugReport',
-        from: resolver.resolve('./runtime/composables/useBugReport'),
-      })
-
-      // Add server API endpoints
-      addServerHandler({
-        route: '/api/bug-report',
-        handler: resolver.resolve('./runtime/server/api/bug-report.post'),
-        method: 'post',
-      })
-
-      addServerHandler({
-        route: '/api/screenshot',
-        handler: resolver.resolve('./runtime/server/api/screenshot.post'),
-        method: 'post',
-      })
+    // Install @nuxt/ui as dependency (if enabled)
+    if (options.ui) {
+      await installModule('@nuxt/ui')
     }
+    // Add runtime config
+    nuxt.options.runtimeConfig.public.bugLt = {
+      ...options,
+      // Don't expose sensitive data to client
+      linearApiKey: undefined,
+      linearTeamName: undefined,
+      linearProjectName: undefined,
+    }
+
+    // Add server-side runtime config for sensitive data
+    nuxt.options.runtimeConfig.bugLt = {
+      linearApiKey: options.linearApiKey,
+      linearTeamName: options.linearTeamName,
+      linearProjectName: options.linearProjectName,
+    }
+
+    // Add plugin
+    addPlugin({
+      src: resolver.resolve('./runtime/plugins/bug-lt'),
+      mode: 'client',
+    })
+
+    // Add components
+    addComponent({
+      name: 'BugReportButton',
+      filePath: resolver.resolve('./runtime/components/BugReportButton.vue'),
+    })
+
+    addComponent({
+      name: 'BugReportModal',
+      filePath: resolver.resolve('./runtime/components/BugReportModal.vue'),
+    })
+
+    addComponent({
+      name: 'BugIcon',
+      filePath: resolver.resolve('./runtime/components/BugIcon.vue'),
+    })
+
+    // Add composables
+    addImports({
+      name: 'useBugReport',
+      from: resolver.resolve('./runtime/composables/useBugReport'),
+    })
+
+    // Add server API endpoints
+    addServerHandler({
+      route: '/api/bug-report',
+      handler: resolver.resolve('./runtime/server/api/bug-report.post'),
+      method: 'post',
+    })
+
+    addServerHandler({
+      route: '/api/screenshot',
+      handler: resolver.resolve('./runtime/server/api/screenshot.post'),
+      method: 'post',
+    })
   },
 })
 

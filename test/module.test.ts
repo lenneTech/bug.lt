@@ -136,7 +136,7 @@ describe('Bug LT Module', () => {
     await module.setup(mockOptions, mockNuxt)
 
     expect(addPlugin).toHaveBeenCalledWith({
-      src: './runtime/plugins/bug-lt.ts',
+      src: './runtime/plugins/bug-lt',
       mode: 'client',
     })
   })
@@ -167,6 +167,8 @@ describe('Bug LT Module', () => {
     expect(mockNuxt.options.runtimeConfig.public.bugLt).toEqual({
       ...mockOptions,
       linearApiKey: undefined, // Should be undefined in public config
+      linearProjectName: undefined, // Should be undefined in public config
+      linearTeamName: undefined, // Should be undefined in public config
     })
 
     // Server config should contain sensitive data
