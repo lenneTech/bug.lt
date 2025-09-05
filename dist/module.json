@@ -1,0 +1,12 @@
+{
+  "name": "@lenne.tech/bug.lt",
+  "configKey": "bug",
+  "compatibility": {
+    "nuxt": ">=4.0.0"
+  },
+  "version": "1.0.0",
+  "builder": {
+    "@nuxt/module-builder": "1.0.2",
+    "unbuild": "3.6.1"
+  }
+}

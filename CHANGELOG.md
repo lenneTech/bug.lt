@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## 1.0.0 (2025-09-05)
+
+### 🐛 Bug Fixes
+
+* update homepage and repository URLs in package.json ([93a4ca0](https://github.com/lenneTech/bug.lt/commit/93a4ca07cfff7f7f4fc4e86c84053097c35e5c33))
+* update repository URL in .releaserc.json ([f2a686a](https://github.com/lenneTech/bug.lt/commit/f2a686accc49d77699eacbc4429c7db201d70c97))
+
+### ♻️ Code Refactoring
+
+* make bug report interface properties optional and remove nuxt-icon dependency ([07baf91](https://github.com/lenneTech/bug.lt/commit/07baf91fbcfc0b07310d78f3667c2bfa9230f528))
+
 ## [1.0.0] - Initial Release
 
 ### Features
