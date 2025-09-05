@@ -1,12 +1,11 @@
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { createApp } from 'vue'
-import { initializeConsoleLogging } from './utils/consoleLogs'
-import BugReportButton from './components/BugReportButton.vue'
-import BugReportModal from './components/BugReportModal.vue'
+import { initializeConsoleLogging } from '../utils/consoleLogs'
+import BugReportButton from '../components/BugReportButton.vue'
+import BugReportModal from '../components/BugReportModal.vue'
 import type { BugReportConfig } from '~/src/runtime/types'
 
 export default defineNuxtPlugin({
-  name: '@lenne.tech/bug.lt',
   setup(nuxtApp) {
     // Only run on client side
     if (import.meta.server) return

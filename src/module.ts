@@ -105,7 +105,10 @@ export default defineNuxtModule<ModuleOptions>({
       }
 
       // Add plugin
-      addPlugin(resolver.resolve('./runtime/plugin.client'))
+      addPlugin({
+        src: resolver.resolve('./runtime/plugins/bug-lt.ts'),
+        mode: 'client',
+      })
 
       // Add components
       addComponent({

@@ -135,7 +135,10 @@ describe('Bug LT Module', () => {
 
     await module.setup(mockOptions, mockNuxt)
 
-    expect(addPlugin).toHaveBeenCalledWith('./runtime/plugin.client')
+    expect(addPlugin).toHaveBeenCalledWith({
+      src: './runtime/plugins/bug-lt.ts',
+      mode: 'client',
+    })
   })
 
   it('should configure runtime config correctly', async () => {
