@@ -87,17 +87,17 @@ export interface BugReportConfig {
   linearApiKey?: string
   linearTeamName?: string
   linearProjectName?: string
-  autoShow: boolean
-  position: BugReportPosition
-  buttonColor: string
-  buttonText: string
-  buttonIcon: string
-  enableScreenshot: boolean
-  enableBrowserInfo: boolean
-  enableConsoleLogs: boolean
-  theme: 'light' | 'dark' | 'auto'
+  autoShow?: boolean
+  position?: BugReportPosition
+  buttonColor?: string
+  buttonText?: string
+  buttonIcon?: string
+  enableScreenshot?: boolean
+  enableBrowserInfo?: boolean
+  enableConsoleLogs?: boolean
+  theme?: 'light' | 'dark' | 'auto'
   customCSS?: string
-  maxConsoleLogs: number
+  maxConsoleLogs?: number
 }
 
 export interface UseBugReportReturn {

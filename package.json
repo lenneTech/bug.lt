@@ -58,7 +58,6 @@
   },
   "dependencies": {
     "@nuxt/kit": "4.1.0",
-    "nuxt-icon": "^1.0.0",
     "puppeteer": "24.18.0",
     "zod": "4.1.5"
   },
