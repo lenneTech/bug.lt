@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.3](https://github.com/lenneTech/bug.lt/compare/v1.1.2...v1.1.3) (2025-09-05)
+
+### ♻️ Code Refactoring
+
+* integrate useRuntimeConfig in BugReportButton and BugReportForm components ([47c1a03](https://github.com/lenneTech/bug.lt/commit/47c1a037452373d61001e0e5a69e691599287c7d))
+
 ## [1.1.2](https://github.com/lenneTech/bug.lt/compare/v1.1.1...v1.1.2) (2025-09-05)
 
 ### ♻️ Code Refactoring
