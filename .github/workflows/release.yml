@@ -23,11 +23,11 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Build
-        run: npm run prepack
-
       - name: Playground prepare
         run: npm run dev:prepare
+
+      - name: Build
+        run: npm run prepack
 
       - name: Lint
         run: npm run lint
