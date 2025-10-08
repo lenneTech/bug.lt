@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.1.6](https://github.com/lenneTech/bug.lt/compare/v1.1.5...v1.1.6) (2025-10-08)
+
+### ♻️ Code Refactoring
+
+* update dependencies for Nuxt and related packages ([abf8c41](https://github.com/lenneTech/bug.lt/commit/abf8c4165daa5b6b834e63fae2eb0dd79bf68e09))
+* update dependencies for Nuxt and related packages ([6a71873](https://github.com/lenneTech/bug.lt/commit/6a718734549ad1d1edb7be36cbfdf89219caa308))
+
 ## [1.1.5](https://github.com/lenneTech/bug.lt/compare/v1.1.4...v1.1.5) (2025-09-05)
 
 ### ♻️ Code Refactoring
