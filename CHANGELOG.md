@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.2.0](https://github.com/lenneTech/bug.lt/compare/v1.1.6...v1.2.0) (2025-10-13)
+
+### 🚀 Features
+
+* add HTTP Basic Authentication support for screenshot functionality ([96c5bae](https://github.com/lenneTech/bug.lt/commit/96c5bae9b6d4e27836fcb6291b2b2f91aad79569))
+
 ## [1.1.6](https://github.com/lenneTech/bug.lt/compare/v1.1.5...v1.1.6) (2025-10-08)
 
 ### ♻️ Code Refactoring
