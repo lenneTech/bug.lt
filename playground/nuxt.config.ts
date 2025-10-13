@@ -24,5 +24,14 @@ export default defineNuxtConfig({
 
     // Theme
     theme: 'auto',
+
+    // HTTP Basic Authentication (optional)
+    // For pages behind htaccess/HTTP Auth
+    httpAuth: process.env.HTTP_AUTH_USERNAME && process.env.HTTP_AUTH_PASSWORD
+      ? {
+          username: process.env.HTTP_AUTH_USERNAME,
+          password: process.env.HTTP_AUTH_PASSWORD,
+        }
+      : undefined,
   },
 })

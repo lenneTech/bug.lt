@@ -44,6 +44,12 @@ export interface ModuleOptions {
 
   // Console Logs
   maxConsoleLogs?: number
+
+  // HTTP Basic Authentication
+  httpAuth?: {
+    username: string
+    password: string
+  }
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -90,11 +96,19 @@ export default defineNuxtModule<ModuleOptions>({
     }
     // Add runtime config
     nuxt.options.runtimeConfig.public.bugLt = {
-      ...options,
-      // Don't expose sensitive data to client
-      linearApiKey: undefined,
-      linearTeamName: undefined,
-      linearProjectName: undefined,
+      enabled: options.enabled,
+      ui: options.ui,
+      autoShow: options.autoShow,
+      position: options.position,
+      buttonColor: options.buttonColor,
+      buttonText: options.buttonText,
+      buttonIcon: options.buttonIcon,
+      enableScreenshot: options.enableScreenshot,
+      enableBrowserInfo: options.enableBrowserInfo,
+      enableConsoleLogs: options.enableConsoleLogs,
+      theme: options.theme,
+      maxConsoleLogs: options.maxConsoleLogs,
+      // Don't expose sensitive data to client: linearApiKey, linearTeamName, linearProjectName, httpAuth
     }
 
     // Add server-side runtime config for sensitive data
@@ -102,6 +116,7 @@ export default defineNuxtModule<ModuleOptions>({
       linearApiKey: options.linearApiKey,
       linearTeamName: options.linearTeamName,
       linearProjectName: options.linearProjectName,
+      httpAuth: options.httpAuth,
     }
 
     // Add plugin

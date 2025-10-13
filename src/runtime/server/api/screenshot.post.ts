@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, readBody } from 'h3'
+import { useRuntimeConfig } from '#imports'
 import puppeteer from 'puppeteer'
 
 export default defineEventHandler(async (event) => {
@@ -52,6 +53,18 @@ export default defineEventHandler(async (event) => {
     })
 
     const page = await browser.newPage()
+
+    // Get HTTP Auth credentials from runtime config
+    const config = useRuntimeConfig()
+    const httpAuth = config.bugLt?.httpAuth
+
+    // Set HTTP Basic Authentication if credentials are provided
+    if (httpAuth?.username && httpAuth?.password) {
+      await page.authenticate({
+        username: httpAuth.username,
+        password: httpAuth.password,
+      })
+    }
 
     // Set viewport
     await page.setViewport({

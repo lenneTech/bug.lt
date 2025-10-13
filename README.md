@@ -10,6 +10,7 @@ Ein Nuxt 4 Modul für Bug-Reporting mit Linear Integration, Screenshots und auto
 
 - 🐛 **Bug Report Button** - Konfigurierbarer Button in der Ecke des Bildschirms
 - 📸 **Server-Side Screenshots** - Vollständige Screenshots mit allen Styles via Puppeteer
+- 🔐 **HTTP Basic Auth Support** - Screenshots funktionieren auch bei Seiten hinter htaccess
 - 🏷️ **Automatische Label-Verwaltung** - Erstellt und verwaltet Labels basierend auf Bug-Type automatisch
 - 🎯 **Linear Integration** - Direkte Erstellung von Issues in Linear mit Team/Project-Resolution
 - 📱 **Browser-Informationen** - Automatische Erfassung von Browser-, OS- und Performance-Daten
@@ -58,7 +59,14 @@ export default defineNuxtConfig({
 
     // Styling
     theme: 'auto', // 'light' | 'dark' | 'auto'
-    maxConsoleLogs: 50
+    maxConsoleLogs: 50,
+
+    // HTTP Basic Authentication (optional)
+    // Für Seiten hinter htaccess/HTTP Auth
+    httpAuth: {
+      username: process.env.HTTP_AUTH_USERNAME,
+      password: process.env.HTTP_AUTH_PASSWORD
+    }
   }
 })
 ```
@@ -89,6 +97,11 @@ CHROME_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Ch
 
 # Windows
 # CHROME_EXECUTABLE_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"
+
+# HTTP Basic Authentication (optional)
+# Für Seiten hinter htaccess/HTTP Auth - benötigt für Screenshot-Funktionalität
+HTTP_AUTH_USERNAME=username
+HTTP_AUTH_PASSWORD=password
 ```
 
 ## Verwendung
@@ -139,6 +152,7 @@ Falls Labels nicht existieren, werden sie automatisch erstellt.
 - **Vollständige CSS-Unterstützung** inklusive OKLCH-Farben
 - **Automatische Anhang-Erstellung** in Linear Issues
 - **Chrome 111+ Unterstützung** für moderne Web-Standards
+- **HTTP Basic Auth Unterstützung** - Screenshots funktionieren auch bei Seiten hinter htaccess
 
 ### Linear Integration
 
@@ -196,6 +210,7 @@ const {
 | `enableConsoleLogs` | `boolean` | `true`                  | Console-Log-Erfassung            |
 | `theme`             | `string`  | `'auto'`                | Theme ('light', 'dark', 'auto')  |
 | `maxConsoleLogs`    | `number`  | `50`                    | Maximale Anzahl Console-Logs     |
+| `httpAuth`          | `object`  | -                       | HTTP Basic Auth Credentials      |
 
 ## Voraussetzungen
 

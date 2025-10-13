@@ -82,6 +82,11 @@ export interface LinearIssueData {
   labelIds?: string[]
 }
 
+export interface HttpAuthCredentials {
+  username: string
+  password: string
+}
+
 export interface BugReportConfig {
   enabled?: boolean
   linearApiKey?: string
@@ -97,6 +102,7 @@ export interface BugReportConfig {
   enableConsoleLogs?: boolean
   theme?: 'light' | 'dark' | 'auto'
   maxConsoleLogs?: number
+  httpAuth?: HttpAuthCredentials
 }
 
 export interface UseBugReportReturn {
