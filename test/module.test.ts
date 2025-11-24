@@ -36,8 +36,28 @@ describe('Bug LT Module', () => {
       enableScreenshot: true,
       enableBrowserInfo: true,
       enableConsoleLogs: true,
+      enableNetworkRequests: true,
+      enableErrorBoundary: true,
+      enableUserJourney: true,
+      autoOpenOnError: false,
       theme: 'auto',
       maxConsoleLogs: 50,
+      maxNetworkRequests: 50,
+      userJourney: {
+        enabled: true,
+        maxEvents: 50,
+        captureClicks: true,
+        captureNavigation: true,
+        captureFormInteractions: true,
+        captureHover: true,
+        captureScroll: true,
+        captureInputChanges: true,
+        captureInputValues: false,
+        captureKeyboard: true,
+        captureErrors: true,
+        captureModalEvents: true,
+        throttleRate: 100,
+      },
     })
   })
 

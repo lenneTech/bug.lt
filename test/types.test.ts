@@ -200,10 +200,12 @@ describe('Type Definitions', () => {
       },
       submitBugReport: async () => {
       },
+      getUserJourney: () => [],
       isSubmitting: { value: false } as any,
       error: { value: null } as any,
       previewScreenshot: { value: null } as any,
       capturingScreenshot: { value: false } as any,
+      lastError: { value: null } as any,
     }
 
     expect(typeof mockReturn.openModal).toBe('function')
