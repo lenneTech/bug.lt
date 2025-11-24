@@ -6,8 +6,10 @@ import type { AttachmentFile, BugReportConfig, BugReportData, BugReportType } fr
 import { captureScreenshot as captureScreenshotUtil } from '../utils/screenshot'
 import { getBrowserInfo } from '../utils/browserInfo'
 import { getConsoleLogs } from '../utils/consoleLogs'
+import { getNetworkRequests } from '../utils/networkRequests'
 import { useBugReport } from '../composables/useBugReport'
 import AttachmentsList from './AttachmentsList.vue'
+import UserJourneyTimeline from './UserJourneyTimeline.vue'
 
 interface Props {
   isSubmitting?: boolean
@@ -26,7 +28,7 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const runtimeConfig = useRuntimeConfig()
-const { previewScreenshot, capturingScreenshot } = useBugReport()
+const { previewScreenshot, capturingScreenshot, lastError, getUserJourney } = useBugReport()
 
 const config = computed((): BugReportConfig => runtimeConfig.public.bugLt as BugReportConfig)
 
@@ -45,6 +47,15 @@ const state = reactive({
   expectedBehavior: '',
   stepsToReproduce: '',
 })
+
+// Pre-fill form if error info is available
+watch(lastError, (errorInfo) => {
+  if (errorInfo) {
+    state.title = errorInfo.message.substring(0, 100)
+    state.type = 'bug'
+    state.description = `**Error Message:**\n${errorInfo.message}\n\n**Component:** ${errorInfo.componentName || 'Unknown'}\n\n**Stack Trace:**\n\`\`\`\n${errorInfo.stack || 'No stack trace available'}\n\`\`\``
+  }
+}, { immediate: true })
 
 const typeOptions = [
   { label: 'Bug', value: 'bug' },
@@ -65,6 +76,10 @@ const attachments = ref<AttachmentFile[]>([])
 const localCapturingScreenshot = ref<boolean>(false)
 const includeBrowserInfo = ref<boolean>(true)
 const includeConsoleLogs = ref<boolean>(true)
+const includeNetworkRequests = ref<boolean>(true)
+const includeUserJourney = ref<boolean>(true)
+
+const userJourneyEvents = computed(() => getUserJourney())
 
 // Watch for pre-captured screenshot changes
 watch(previewScreenshot, (newScreenshot) => {
@@ -151,6 +166,14 @@ const onSubmit = async () => {
 
   if (includeConsoleLogs.value && config.value?.enableConsoleLogs) {
     data.consoleLogs = getConsoleLogs(config.value?.maxConsoleLogs)
+  }
+
+  if (includeNetworkRequests.value && config.value?.enableNetworkRequests) {
+    data.networkRequests = getNetworkRequests(config.value?.maxNetworkRequests)
+  }
+
+  if (includeUserJourney.value && config.value?.enableUserJourney) {
+    data.userInteractions = getUserJourney()
   }
 
   emit('submit', data)
@@ -311,9 +334,58 @@ const onSubmit = async () => {
               :disabled="isSubmitting"
             />
           </div>
+
+          <!-- Network Requests Toggle -->
+          <div
+            v-if="config?.enableNetworkRequests"
+            class="flex items-center justify-between"
+          >
+            <div>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                Netzwerk-Anfragen auslesen
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                API-Calls und HTTP-Requests der letzten Minuten
+              </p>
+            </div>
+            <USwitch
+              v-model="includeNetworkRequests"
+              :disabled="isSubmitting"
+            />
+          </div>
+
+          <!-- User Journey Toggle -->
+          <div
+            v-if="config?.enableUserJourney"
+            class="flex items-center justify-between"
+          >
+            <div>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                User Journey auslesen
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                Benutzer-Interaktionen und Navigation ({{ userJourneyEvents.length }} Events)
+              </p>
+            </div>
+            <USwitch
+              v-model="includeUserJourney"
+              :disabled="isSubmitting"
+            />
+          </div>
         </div>
       </template>
     </UAccordion>
+
+    <!-- User Journey Timeline Preview -->
+    <div
+      v-if="config?.enableUserJourney && includeUserJourney && userJourneyEvents.length > 0"
+      class="space-y-2"
+    >
+      <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+        User Journey Preview ({{ userJourneyEvents.length }} Events)
+      </label>
+      <UserJourneyTimeline :events="userJourneyEvents" />
+    </div>
 
     <!-- Action Buttons -->
     <div class="flex justify-end gap-3 pt-4">

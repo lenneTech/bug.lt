@@ -38,12 +38,36 @@ export interface ModuleOptions {
   enableScreenshot?: boolean
   enableBrowserInfo?: boolean
   enableConsoleLogs?: boolean
+  enableNetworkRequests?: boolean
+  enableErrorBoundary?: boolean
+  enableUserJourney?: boolean
+  autoOpenOnError?: boolean
 
   // Styling
   theme?: 'light' | 'dark' | 'auto'
 
   // Console Logs
   maxConsoleLogs?: number
+
+  // Network Requests
+  maxNetworkRequests?: number
+
+  // User Journey Tracking
+  userJourney?: {
+    enabled?: boolean
+    maxEvents?: number
+    captureClicks?: boolean
+    captureNavigation?: boolean
+    captureFormInteractions?: boolean
+    captureHover?: boolean
+    captureScroll?: boolean
+    captureInputChanges?: boolean
+    captureInputValues?: boolean
+    captureKeyboard?: boolean
+    captureErrors?: boolean
+    captureModalEvents?: boolean
+    throttleRate?: number
+  }
 
   // HTTP Basic Authentication
   httpAuth?: {
@@ -70,8 +94,28 @@ export default defineNuxtModule<ModuleOptions>({
     enableScreenshot: true,
     enableBrowserInfo: true,
     enableConsoleLogs: true,
+    enableNetworkRequests: true,
+    enableErrorBoundary: true,
+    enableUserJourney: true,
+    autoOpenOnError: false,
     theme: 'auto',
     maxConsoleLogs: 50,
+    maxNetworkRequests: 50,
+    userJourney: {
+      enabled: true,
+      maxEvents: 50,
+      captureClicks: true,
+      captureNavigation: true,
+      captureFormInteractions: true,
+      captureHover: true,
+      captureScroll: true,
+      captureInputChanges: true,
+      captureInputValues: false,
+      captureKeyboard: true,
+      captureErrors: true,
+      captureModalEvents: true,
+      throttleRate: 100,
+    },
   },
   async setup(options, nuxt) {
     // Early exit if module is disabled
@@ -106,8 +150,14 @@ export default defineNuxtModule<ModuleOptions>({
       enableScreenshot: options.enableScreenshot,
       enableBrowserInfo: options.enableBrowserInfo,
       enableConsoleLogs: options.enableConsoleLogs,
+      enableNetworkRequests: options.enableNetworkRequests,
+      enableErrorBoundary: options.enableErrorBoundary,
+      enableUserJourney: options.enableUserJourney,
+      autoOpenOnError: options.autoOpenOnError,
       theme: options.theme,
       maxConsoleLogs: options.maxConsoleLogs,
+      maxNetworkRequests: options.maxNetworkRequests,
+      userJourney: options.userJourney,
       // Don't expose sensitive data to client: linearApiKey, linearTeamName, linearProjectName, httpAuth
     }
 
@@ -139,6 +189,16 @@ export default defineNuxtModule<ModuleOptions>({
     addComponent({
       name: 'BugIcon',
       filePath: resolver.resolve('./runtime/components/BugIcon.vue'),
+    })
+
+    addComponent({
+      name: 'ErrorBoundary',
+      filePath: resolver.resolve('./runtime/components/ErrorBoundary.vue'),
+    })
+
+    addComponent({
+      name: 'UserJourneyTimeline',
+      filePath: resolver.resolve('./runtime/components/UserJourneyTimeline.vue'),
     })
 
     // Add composables

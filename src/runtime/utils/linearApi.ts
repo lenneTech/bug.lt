@@ -427,6 +427,97 @@ ${bugReport.consoleLogs
     sections.push(logsSection)
   }
 
+  // Network Requests
+  if (bugReport.networkRequests && bugReport.networkRequests.length > 0) {
+    const requests = bugReport.networkRequests.slice(-10) // Only include last 10 requests
+
+    const networkSection = `## Network Requests (Last ${requests.length})
+
+| Method | URL | Status | Duration |
+|--------|-----|--------|----------|
+${requests.map((req) => {
+  const url = req.url.length > 80 ? req.url.substring(0, 77) + '...' : req.url
+  const status = req.status === 0 ? 'ERR' : req.status
+  const duration = req.duration ? `${req.duration}ms` : 'N/A'
+  return `| ${req.method} | ${url} | ${status} | ${duration} |`
+}).join('\n')}
+
+**Failed Requests:**
+${requests.filter(req => req.status >= 400 || req.status === 0).map((req) => {
+  const errorInfo = [`- **${req.method} ${req.url}**`]
+  errorInfo.push(`  - Status: ${req.status} ${req.statusText}`)
+  if (req.error) errorInfo.push(`  - Error: ${req.error}`)
+  if (req.responseBody) errorInfo.push(`  - Response: \`${req.responseBody.substring(0, 200)}${req.responseBody.length > 200 ? '...' : ''}\``)
+  return errorInfo.join('\n')
+}).join('\n') || '*No failed requests*'}`
+
+    sections.push(networkSection)
+  }
+
+  // User Journey / Interaction Timeline
+  if (bugReport.userInteractions && bugReport.userInteractions.length > 0) {
+    const interactions = bugReport.userInteractions
+
+    const formatEventType = (type: string): string => {
+      return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    }
+
+    const formatTimestamp = (timestamp: string): string => {
+      const date = new Date(timestamp)
+      return date.toLocaleTimeString('de-DE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        fractionalSecondDigits: 3,
+      })
+    }
+
+    const formatMetadata = (metadata: any): string => {
+      if (!metadata) return ''
+
+      const parts: string[] = []
+
+      if (metadata.text) {
+        parts.push(metadata.text.substring(0, 40))
+      }
+      if (metadata.value) {
+        parts.push(`Value: ${metadata.value}`)
+      }
+      if (metadata.url) {
+        parts.push(metadata.url.substring(0, 60))
+      }
+      if (metadata.toUrl) {
+        parts.push(`→ ${metadata.toUrl.substring(0, 60)}`)
+      }
+      if (metadata.scrollPosition !== undefined) {
+        parts.push(`Scroll: ${metadata.scrollPosition}px`)
+      }
+      if (metadata.key) {
+        parts.push(`Key: ${metadata.key}`)
+      }
+      if (metadata.errorMessage) {
+        parts.push(`Error: ${metadata.errorMessage.substring(0, 50)}`)
+      }
+
+      return parts.join(' | ')
+    }
+
+    const userJourneySection = `## User Journey Timeline (${interactions.length} Events)
+
+| Time | Event Type | Target | Details |
+|------|------------|--------|---------|
+${interactions.map((event) => {
+  const time = formatTimestamp(event.timestamp)
+  const type = formatEventType(event.type)
+  const target = event.target.length > 50 ? event.target.substring(0, 47) + '...' : event.target
+  const details = formatMetadata(event.metadata)
+  const detailsFormatted = details.length > 60 ? details.substring(0, 57) + '...' : details
+  return `| ${time} | ${type} | ${target} | ${detailsFormatted} |`
+}).join('\n')}`
+
+    sections.push(userJourneySection)
+  }
+
   // Add attachments note if present
   if (bugReport.attachments && bugReport.attachments.length > 0) {
     const attachmentNames = bugReport.attachments.map(a => a.name).join(', ')

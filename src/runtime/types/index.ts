@@ -1,3 +1,5 @@
+import type { Ref } from 'vue'
+
 export type BugReportType = 'bug' | 'feature' | 'enhancement' | 'other'
 
 export type BugReportPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
@@ -51,6 +53,64 @@ export interface ConsoleLogEntry {
   stack?: string
 }
 
+export interface NetworkRequestEntry {
+  method: string
+  url: string
+  status: number
+  statusText: string
+  timestamp: string
+  duration?: number
+  requestHeaders?: Record<string, string>
+  responseHeaders?: Record<string, string>
+  requestBody?: string
+  responseBody?: string
+  error?: string
+  type: 'fetch' | 'xhr'
+}
+
+export type UserInteractionType
+  = | 'click'
+    | 'navigation'
+    | 'form_submit'
+    | 'form_change'
+    | 'input_change'
+    | 'hover'
+    | 'scroll'
+    | 'keyboard'
+    | 'modal_open'
+    | 'modal_close'
+    | 'error'
+
+export interface UserInteractionEvent {
+  type: UserInteractionType
+  target: string
+  timestamp: string
+  metadata?: {
+    element?: string
+    tag?: string
+    id?: string
+    classes?: string[]
+    text?: string
+    value?: string
+    url?: string
+    fromUrl?: string
+    toUrl?: string
+    key?: string
+    scrollPosition?: number
+    errorMessage?: string
+    [key: string]: any
+  }
+}
+
+export interface ErrorInfo {
+  message: string
+  stack?: string
+  componentName?: string
+  timestamp: string
+  url?: string
+  userAgent?: string
+}
+
 export interface AttachmentFile {
   id: string
   name: string
@@ -71,6 +131,8 @@ export interface BugReportData {
   attachments?: AttachmentFile[]
   browserInfo?: BrowserInfo
   consoleLogs?: ConsoleLogEntry[]
+  networkRequests?: NetworkRequestEntry[]
+  userInteractions?: UserInteractionEvent[]
   customData?: Record<string, any>
 }
 
@@ -87,6 +149,22 @@ export interface HttpAuthCredentials {
   password: string
 }
 
+export interface UserJourneyConfig {
+  enabled?: boolean
+  maxEvents?: number
+  captureClicks?: boolean
+  captureNavigation?: boolean
+  captureFormInteractions?: boolean
+  captureHover?: boolean
+  captureScroll?: boolean
+  captureInputChanges?: boolean
+  captureInputValues?: boolean
+  captureKeyboard?: boolean
+  captureErrors?: boolean
+  captureModalEvents?: boolean
+  throttleRate?: number
+}
+
 export interface BugReportConfig {
   enabled?: boolean
   linearApiKey?: string
@@ -100,16 +178,24 @@ export interface BugReportConfig {
   enableScreenshot?: boolean
   enableBrowserInfo?: boolean
   enableConsoleLogs?: boolean
+  enableNetworkRequests?: boolean
+  enableErrorBoundary?: boolean
+  enableUserJourney?: boolean
+  autoOpenOnError?: boolean
   theme?: 'light' | 'dark' | 'auto'
   maxConsoleLogs?: number
+  maxNetworkRequests?: number
+  userJourney?: UserJourneyConfig
   httpAuth?: HttpAuthCredentials
 }
 
 export interface UseBugReportReturn {
-  openModal: () => Promise<void>
+  openModal: (errorInfo?: ErrorInfo) => Promise<void>
   submitBugReport: (data: BugReportData) => Promise<void>
+  getUserJourney: () => UserInteractionEvent[]
   isSubmitting: Ref<boolean>
   error: Ref<string | null>
   previewScreenshot: Ref<string | null>
   capturingScreenshot: Ref<boolean>
+  lastError: Ref<ErrorInfo | null>
 }

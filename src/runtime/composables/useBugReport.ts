@@ -1,23 +1,32 @@
 import { ref } from 'vue'
-import type { BugReportData, UseBugReportReturn } from '../types'
+import type { BugReportData, ErrorInfo, UseBugReportReturn, UserInteractionEvent } from '../types'
 import { useOverlay } from '#ui/composables/useOverlay'
 import { useToast } from '#ui/composables/useToast'
 import BugReportModal from '../components/BugReportModal.vue'
+import { getUserInteractions } from '../utils/userInteractions'
 
 // Global state for bug reporting
 const isSubmitting = ref<boolean>(false)
 const error = ref<string | null>(null)
 const previewScreenshot = ref<string | null>(null)
 const capturingScreenshot = ref<boolean>(false)
+const lastError = ref<ErrorInfo | null>(null)
 
 export const useBugReport = (): UseBugReportReturn => {
   const overlay = useOverlay()
   const toast = useToast()
 
-  const openModal = async () => {
+  const openModal = async (errorInfo?: ErrorInfo) => {
+    if (errorInfo) {
+      lastError.value = errorInfo
+    }
     const modal = overlay.create(BugReportModal)
     modal.open()
     error.value = null
+  }
+
+  const getUserJourney = (): UserInteractionEvent[] => {
+    return getUserInteractions()
   }
 
   const submitBugReport = async (data: BugReportData): Promise<void> => {
@@ -68,9 +77,11 @@ export const useBugReport = (): UseBugReportReturn => {
   return {
     openModal,
     submitBugReport,
+    getUserJourney,
     isSubmitting,
     error,
     previewScreenshot,
     capturingScreenshot,
+    lastError,
   }
 }
