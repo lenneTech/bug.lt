@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.3.0](https://github.com/lenneTech/bug.lt/compare/v1.2.0...v1.3.0) (2025-11-24)
+
+### 🚀 Features
+
+* erweitere Benutzerreise-Tracking und Fehlerberichterstattung mit neuen Optionen ([3419486](https://github.com/lenneTech/bug.lt/commit/341948648ec80ff30cc34277b32bbced5ae002f4))
+* Implement user journey tracking and bug reporting enhancements ([76c6dbf](https://github.com/lenneTech/bug.lt/commit/76c6dbf29bd50c5bd375540de96952b7aeedd01d))
+
 ## [1.2.0](https://github.com/lenneTech/bug.lt/compare/v1.1.6...v1.2.0) (2025-10-13)
 
 ### 🚀 Features
