@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.4.0](https://github.com/lenneTech/bug.lt/compare/v1.3.0...v1.4.0) (2025-11-27)
+
+### 🚀 Features
+
+* Replace Puppeteer with modern-screenshot for client-side captures ([13d553a](https://github.com/lenneTech/bug.lt/commit/13d553a530b8ea9f75782231ad0d55ab014ff242))
+
 ## [1.3.0](https://github.com/lenneTech/bug.lt/compare/v1.2.0...v1.3.0) (2025-11-24)
 
 ### 🚀 Features
