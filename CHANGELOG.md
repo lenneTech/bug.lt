@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.1](https://github.com/lenneTech/bug.lt/compare/v1.6.0...v1.6.1) (2025-11-27)
+
+### 🐛 Bug Fixes
+
+* fix linear ticket format ([eb16055](https://github.com/lenneTech/bug.lt/commit/eb1605572b2bddd1136571b1dd65f669423d69c2))
+
 ## [1.6.0](https://github.com/lenneTech/bug.lt/compare/v1.5.0...v1.6.0) (2025-11-27)
 
 ### 🚀 Features
