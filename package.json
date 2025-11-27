@@ -1,6 +1,6 @@
 {
   "name": "@lenne.tech/bug.lt",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A comprehensive Nuxt 4 module for bug reporting with Linear integration, screenshot capture, and detailed system information collection",
   "author": "lenne.Tech <info@lenne.tech>",
   "homepage": "https://github.com/lenneTech/bug.lt#readme",
