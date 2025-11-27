@@ -234,10 +234,9 @@ describe('formatBugReportForLinear', () => {
     expect(result.description).toContain('## Kontext')
     expect(result.description).toContain('| **URL** | https://example.com |')
     expect(result.description).toContain('| **Browser** | Chrome 120.0.0 |')
-    // Technical details in <details> tags
+    // Technical details
     expect(result.description).toContain('## Technische Details')
-    expect(result.description).toContain('<details>')
-    expect(result.description).toContain('<summary>Console Logs (1)</summary>')
+    expect(result.description).toContain('### Console Logs (1)')
     expect(result.description).toContain('[2024-01-01T00:00:00.000Z] ERROR: Test error')
     // Attachments note
     expect(result.description).toContain('*1 Screenshot(s) angehängt*')

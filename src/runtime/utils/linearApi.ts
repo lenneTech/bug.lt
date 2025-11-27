@@ -477,24 +477,21 @@ ${interactions.map((event) => {
   // === SECTION 4: Technical Details (collapsible) ===
   const technicalParts: string[] = []
 
-  // Console Logs in <details>
+  // Console Logs
   if (bugReport.consoleLogs && bugReport.consoleLogs.length > 0) {
     const logs = bugReport.consoleLogs.slice(-10)
     const logsContent = logs
       .map(log => `[${log.timestamp}] ${log.level.toUpperCase()}: ${log.message.join(' ')}`)
       .join('\n')
 
-    technicalParts.push(`<details>
-<summary>Console Logs (${logs.length})</summary>
+    technicalParts.push(`### Console Logs (${logs.length})
 
 \`\`\`
 ${logsContent}
-\`\`\`
-
-</details>`)
+\`\`\``)
   }
 
-  // Network Requests in <details>
+  // Network Requests
   if (bugReport.networkRequests && bugReport.networkRequests.length > 0) {
     const requests = bugReport.networkRequests.slice(-10)
     const failedRequests = requests.filter(req => req.status >= 400 || req.status === 0)
@@ -513,12 +510,9 @@ ${requests.map((req) => {
       }).join('\n')}`
     }
 
-    technicalParts.push(`<details>
-<summary>Network Requests (${requests.length})</summary>
+    technicalParts.push(`### Network Requests (${requests.length})
 
-${networkContent}
-
-</details>`)
+${networkContent}`)
   }
 
   if (technicalParts.length > 0) {
