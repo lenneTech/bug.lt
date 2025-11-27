@@ -1,49 +1,66 @@
-// Server-side screenshot using Puppeteer API
-export const captureScreenshot = async (
+import { domToPng } from 'modern-screenshot'
+
+export interface ScreenshotOptions {
+  quality?: number
+  scale?: number
+  backgroundColor?: string
+}
+
+/**
+ * Client-side screenshot capture using modern-screenshot
+ * Captures the current viewport (visible area) with all DOM state
+ */
+export async function captureScreenshot(
   element?: HTMLElement,
-  options?: {
-    quality?: number
-    viewport?: { width: number, height: number }
-  },
-): Promise<string> => {
+  options: ScreenshotOptions = {},
+): Promise<string> {
   if (typeof window === 'undefined') {
     throw new TypeError('Screenshot capture is only available in the browser')
   }
 
+  const targetElement: HTMLElement = element || document.documentElement
+  const scale: number = options.scale || window.devicePixelRatio || 1
+
+  // Detect background color from theme
+  const isDark: boolean = detectCurrentTheme() === 'dark'
+  const backgroundColor: string = options.backgroundColor || (isDark ? '#0a0a0a' : '#ffffff')
+
   try {
-    const selector = element ? getElementSelector(element) : undefined
-    const viewport = options?.viewport || { width: 1920, height: 1080 } // Full HD as default
-
-    // Detect current theme
-    const theme = detectCurrentTheme()
-
-    const response: any = await $fetch('/api/screenshot', {
-      method: 'POST',
-      body: {
-        url: window.location.href,
-        selector,
-        viewport,
-        theme,
+    const dataUrl: string = await domToPng(targetElement, {
+      scale,
+      backgroundColor,
+      // Capture only the visible viewport
+      width: window.innerWidth,
+      height: window.innerHeight,
+      style: {
+        // Ensure we capture from the top-left of the viewport
+        transform: 'none',
+        transformOrigin: 'top left',
+      },
+      // Handle CORS images gracefully
+      fetch: {
+        requestInit: {
+          mode: 'cors',
+        },
+        bypassingCache: true,
       },
     })
 
-    if (!response?.success) {
-      throw new Error(response.message || 'Screenshot failed')
-    }
-
-    return response.screenshot
+    return dataUrl
   }
   catch (error) {
-    console.error('Server-side screenshot failed:', error)
+    console.error('Screenshot capture failed:', error)
     throw new Error('Screenshot-Erfassung fehlgeschlagen')
   }
 }
 
-// Helper function to detect current theme
+/**
+ * Detect current theme from Nuxt Color Mode, document classes, or system preference
+ */
 function detectCurrentTheme(): 'light' | 'dark' {
   // Check Nuxt Color Mode
-  if (typeof window !== 'undefined' && window.__NUXT_COLOR_MODE__) {
-    return window.__NUXT_COLOR_MODE__.value === 'dark' ? 'dark' : 'light'
+  if (typeof window !== 'undefined' && (window as any).__NUXT_COLOR_MODE__) {
+    return (window as any).__NUXT_COLOR_MODE__.value === 'dark' ? 'dark' : 'light'
   }
 
   // Check document classes
@@ -61,23 +78,5 @@ function detectCurrentTheme(): 'light' | 'dark' {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
 
-  // Default to light theme
   return 'light'
-}
-
-// Helper function to generate a selector for an element
-function getElementSelector(element: HTMLElement): string {
-  if (element.id) {
-    return `#${element.id}`
-  }
-
-  if (element.className) {
-    const classes = element.className.split(' ').filter(c => c.length > 0)
-    if (classes.length > 0) {
-      return `.${classes.join('.')}`
-    }
-  }
-
-  // Fallback to tag name
-  return element.tagName.toLowerCase()
 }

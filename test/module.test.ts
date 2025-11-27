@@ -132,12 +132,6 @@ describe('Bug LT Module', () => {
       handler: './runtime/server/api/bug-report.post',
       method: 'post',
     })
-
-    expect(addServerHandler).toHaveBeenCalledWith({
-      route: '/api/screenshot',
-      handler: './runtime/server/api/screenshot.post',
-      method: 'post',
-    })
   })
 
   it('should register plugin correctly', async () => {

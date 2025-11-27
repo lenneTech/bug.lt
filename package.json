@@ -18,8 +18,7 @@
     "linear",
     "screenshot",
     "error-tracking",
-    "issue-management",
-    "puppeteer"
+    "issue-management"
   ],
   "license": "MIT",
   "publishConfig": {
@@ -59,7 +58,7 @@
   "dependencies": {
     "@nuxt/kit": "4.2.1",
     "@nuxt/ui": "4.2.1",
-    "puppeteer": "24.31.0",
+    "modern-screenshot": "4.6.7",
     "zod": "4.1.13"
   },
   "devDependencies": {

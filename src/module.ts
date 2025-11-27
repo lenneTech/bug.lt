@@ -69,11 +69,6 @@ export interface ModuleOptions {
     throttleRate?: number
   }
 
-  // HTTP Basic Authentication
-  httpAuth?: {
-    username: string
-    password: string
-  }
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -158,7 +153,7 @@ export default defineNuxtModule<ModuleOptions>({
       maxConsoleLogs: options.maxConsoleLogs,
       maxNetworkRequests: options.maxNetworkRequests,
       userJourney: options.userJourney,
-      // Don't expose sensitive data to client: linearApiKey, linearTeamName, linearProjectName, httpAuth
+      // Don't expose sensitive data to client: linearApiKey, linearTeamName, linearProjectName
     }
 
     // Add server-side runtime config for sensitive data
@@ -166,7 +161,6 @@ export default defineNuxtModule<ModuleOptions>({
       linearApiKey: options.linearApiKey,
       linearTeamName: options.linearTeamName,
       linearProjectName: options.linearProjectName,
-      httpAuth: options.httpAuth,
     }
 
     // Add plugin
@@ -211,12 +205,6 @@ export default defineNuxtModule<ModuleOptions>({
     addServerHandler({
       route: '/api/bug-report',
       handler: resolver.resolve('./runtime/server/api/bug-report.post'),
-      method: 'post',
-    })
-
-    addServerHandler({
-      route: '/api/screenshot',
-      handler: resolver.resolve('./runtime/server/api/screenshot.post'),
       method: 'post',
     })
   },

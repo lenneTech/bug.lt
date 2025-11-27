@@ -144,11 +144,6 @@ export interface LinearIssueData {
   labelIds?: string[]
 }
 
-export interface HttpAuthCredentials {
-  username: string
-  password: string
-}
-
 export interface UserJourneyConfig {
   enabled?: boolean
   maxEvents?: number
@@ -186,7 +181,6 @@ export interface BugReportConfig {
   maxConsoleLogs?: number
   maxNetworkRequests?: number
   userJourney?: UserJourneyConfig
-  httpAuth?: HttpAuthCredentials
 }
 
 export interface UseBugReportReturn {

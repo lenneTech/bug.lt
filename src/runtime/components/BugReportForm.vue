@@ -3,7 +3,6 @@ import { computed, reactive, ref, watch } from 'vue'
 import { z } from 'zod'
 import { useRuntimeConfig } from '#imports'
 import type { AttachmentFile, BugReportConfig, BugReportData, BugReportType } from '../types'
-import { captureScreenshot as captureScreenshotUtil } from '../utils/screenshot'
 import { getBrowserInfo } from '../utils/browserInfo'
 import { getConsoleLogs } from '../utils/consoleLogs'
 import { getNetworkRequests } from '../utils/networkRequests'
@@ -28,7 +27,7 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const runtimeConfig = useRuntimeConfig()
-const { previewScreenshot, capturingScreenshot, lastError, getUserJourney } = useBugReport()
+const { previewScreenshot, lastError, getUserJourney } = useBugReport()
 
 const config = computed((): BugReportConfig => runtimeConfig.public.bugLt as BugReportConfig)
 
@@ -73,7 +72,6 @@ const accordionItems = [
 ]
 
 const attachments = ref<AttachmentFile[]>([])
-const localCapturingScreenshot = ref<boolean>(false)
 const includeBrowserInfo = ref<boolean>(true)
 const includeConsoleLogs = ref<boolean>(true)
 const includeNetworkRequests = ref<boolean>(true)
@@ -99,35 +97,6 @@ watch(previewScreenshot, (newScreenshot) => {
     attachments.value.unshift(screenshotAttachment)
   }
 }, { immediate: true })
-
-const captureScreenshot = async () => {
-  localCapturingScreenshot.value = true
-  try {
-    const screenshot = await captureScreenshotUtil()
-    if (screenshot) {
-      // Remove existing screenshot first
-      attachments.value = attachments.value.filter(a => !a.isScreenshot)
-      const screenshotSize = Math.round((screenshot.length - 'data:image/png;base64,'.length) * 0.75)
-
-      const screenshotAttachment: AttachmentFile = {
-        id: 'screenshot-' + Date.now(),
-        name: 'screenshot.png',
-        type: 'image/png',
-        size: screenshotSize,
-        data: screenshot,
-        isScreenshot: true,
-        preview: screenshot,
-      }
-      attachments.value.unshift(screenshotAttachment)
-    }
-  }
-  catch (error) {
-    console.error('Failed to capture screenshot:', error)
-  }
-  finally {
-    localCapturingScreenshot.value = false
-  }
-}
 
 const addAttachments = (newAttachments: AttachmentFile[]) => {
   attachments.value.push(...newAttachments)
@@ -262,25 +231,15 @@ const onSubmit = async () => {
 
     <!-- Attachments Section -->
     <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
-          Anhänge
-        </label>
-        <UButton
-          v-if="config?.enableScreenshot"
-          color="neutral"
-          variant="outline"
-          size="sm"
-          icon="i-heroicons-camera"
-          :loading="localCapturingScreenshot || capturingScreenshot"
-          :disabled="isSubmitting"
-          @click="captureScreenshot"
+      <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
+        Anhänge
+        <span
+          v-if="hasScreenshot"
+          class="text-xs text-gray-500 dark:text-gray-400 font-normal ml-2"
         >
-          {{
-            (localCapturingScreenshot || capturingScreenshot) ? 'Wird erfasst...' : hasScreenshot ? 'Neu erfassen' : 'Screenshot erfassen'
-          }}
-        </UButton>
-      </div>
+          (Screenshot automatisch erfasst)
+        </span>
+      </label>
 
       <AttachmentsList
         :attachments="attachments"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useBugReport } from '../composables/useBugReport'
+import { captureScreenshot } from '../utils/screenshot'
 import type { BugReportConfig } from '~/src/runtime/types'
 import iconPng from '../public/icon.png'
 import { useRuntimeConfig } from '#imports'
@@ -21,11 +22,26 @@ const props = withDefaults(defineProps<Props>(), {
   show: undefined,
 })
 
-const { openModal, capturingScreenshot } = useBugReport()
+const { openModal, capturingScreenshot, previewScreenshot } = useBugReport()
 const runtimeConfig = useRuntimeConfig()
 const bugConfig: BugReportConfig = runtimeConfig.public.bugLt as BugReportConfig
 
-const handleOpenModal = async () => {
+const handleOpenModal = async (): Promise<void> => {
+  // Capture screenshot BEFORE opening modal (captures current state)
+  capturingScreenshot.value = true
+  try {
+    const screenshot: string = await captureScreenshot()
+    previewScreenshot.value = screenshot
+  }
+  catch (error) {
+    console.error('Failed to capture screenshot:', error)
+    previewScreenshot.value = null
+  }
+  finally {
+    capturingScreenshot.value = false
+  }
+
+  // Now open the modal with the captured screenshot
   await openModal()
 }
 
