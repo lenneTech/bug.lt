@@ -128,7 +128,7 @@ const getEventMetadata = (event: UserInteractionEvent): string => {
     <div class="mb-4">
       <USelect
         v-model="selectedEventType"
-        :options="eventTypes.map(type => ({
+        :items="eventTypes.map(type => ({
           label: type === 'all' ? 'Alle Event-Typen' : formatEventType(type),
           value: type,
         }))"

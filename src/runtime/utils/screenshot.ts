@@ -32,8 +32,11 @@ export async function captureScreenshot(
       // Capture only the visible viewport
       width: window.innerWidth,
       height: window.innerHeight,
+      features: {
+        // Capture scrolled content at current scroll position
+        restoreScrollPosition: true,
+      },
       style: {
-        // Ensure we capture from the top-left of the viewport
         transform: 'none',
         transformOrigin: 'top left',
       },

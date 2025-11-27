@@ -9,12 +9,14 @@ Ein Nuxt 4 Modul für Bug-Reporting mit Linear Integration, Screenshots und auto
 ## Features
 
 - 🐛 **Bug Report Button** - Konfigurierbarer Button in der Ecke des Bildschirms
-- 📸 **Server-Side Screenshots** - Vollständige Screenshots mit allen Styles via Puppeteer
-- 🔐 **HTTP Basic Auth Support** - Screenshots funktionieren auch bei Seiten hinter htaccess
+- 📸 **Client-Side Screenshots** - Schnelle DOM-Screenshots mit `modern-screenshot` (kein Chrome/Puppeteer nötig)
+- 🚶 **User Journey Tracking** - Automatische Erfassung von Benutzerinteraktionen (Klicks, Navigation, Formulare)
+- 🌐 **Network Requests** - Erfassung aller Netzwerkanfragen mit Status und Fehlerdetails
 - 🏷️ **Automatische Label-Verwaltung** - Erstellt und verwaltet Labels basierend auf Bug-Type automatisch
 - 🎯 **Linear Integration** - Direkte Erstellung von Issues in Linear mit Team/Project-Resolution
 - 📱 **Browser-Informationen** - Automatische Erfassung von Browser-, OS- und Performance-Daten
-- 📝 **Console Logs** - Erfassung und Anhang von Console-Ausgaben
+- 📝 **Console Logs** - Erfassung und Anhang von Console-Ausgaben (CSS-Styles werden bereinigt)
+- ⚠️ **Error Boundary** - Automatische Fehlererfassung bei JavaScript-Exceptions
 - 🌓 **Theme Support** - Dark/Light Theme mit modernen OKLCH Farben
 - 🔒 **Server-Side Sicherheit** - API-Keys werden nur server-seitig verwendet
 - 🇩🇪 **Deutsche Lokalisierung** - Vollständig deutsche Benutzeroberfläche
@@ -56,16 +58,24 @@ export default defineNuxtConfig({
     enableScreenshot: true,
     enableBrowserInfo: true,
     enableConsoleLogs: true,
+    enableNetworkRequests: true,
+    enableUserJourney: true,
+    enableErrorBoundary: true,
+    autoOpenOnError: false, // Modal automatisch öffnen bei JS-Fehlern
 
     // Styling
     theme: 'auto', // 'light' | 'dark' | 'auto'
     maxConsoleLogs: 50,
+    maxNetworkRequests: 50,
 
-    // HTTP Basic Authentication (optional)
-    // Für Seiten hinter htaccess/HTTP Auth
-    httpAuth: {
-      username: process.env.HTTP_AUTH_USERNAME,
-      password: process.env.HTTP_AUTH_PASSWORD
+    // User Journey Konfiguration (optional)
+    userJourney: {
+      maxEvents: 50,
+      captureClicks: true,
+      captureNavigation: true,
+      captureFormInteractions: true,
+      captureKeyboard: true,
+      captureErrors: true,
     }
   }
 })
@@ -85,23 +95,6 @@ LINEAR_TEAM_NAME=Entwicklung
 
 # Linear Projekt Name (optional)
 LINEAR_PROJECT_NAME=Website
-
-# Chrome Executable Path für Screenshots (erforderlich)
-# Unterstützt moderne CSS Features wie OKLCH Farben (Chrome 111+ erforderlich)
-
-# macOS
-CHROME_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-
-# Linux
-# CHROME_EXECUTABLE_PATH="/usr/bin/google-chrome"
-
-# Windows
-# CHROME_EXECUTABLE_PATH="C:\Program Files\Google\Chrome\Application\chrome.exe"
-
-# HTTP Basic Authentication (optional)
-# Für Seiten hinter htaccess/HTTP Auth - benötigt für Screenshot-Funktionalität
-HTTP_AUTH_USERNAME=username
-HTTP_AUTH_PASSWORD=password
 ```
 
 ## Verwendung
@@ -148,11 +141,26 @@ Falls Labels nicht existieren, werden sie automatisch erstellt.
 
 ### Screenshot-Funktionalität
 
-- **Server-seitige Generierung** mit Puppeteer für perfekte Darstellung
-- **Vollständige CSS-Unterstützung** inklusive OKLCH-Farben
+- **Client-seitige Erfassung** mit `modern-screenshot` (kein Server/Chrome nötig)
+- **Viewport-Screenshot** - Erfasst den aktuell sichtbaren Bereich inkl. Scroll-Position
 - **Automatische Anhang-Erstellung** in Linear Issues
-- **Chrome 111+ Unterstützung** für moderne Web-Standards
-- **HTTP Basic Auth Unterstützung** - Screenshots funktionieren auch bei Seiten hinter htaccess
+- **Theme-Erkennung** - Passt Hintergrundfarbe an Light/Dark Mode an
+
+### User Journey Tracking
+
+- **Klick-Tracking** - Erfasst alle Klicks mit Element-Informationen
+- **Navigation** - Protokolliert Seitenwechsel und URL-Änderungen
+- **Formular-Interaktionen** - Erfasst Fokus, Blur und Submit-Events
+- **Keyboard-Events** - Protokolliert wichtige Tastatureingaben
+- **Fehler-Tracking** - Erfasst JavaScript-Exceptions automatisch
+- **Timeline-Darstellung** - Übersichtliche Darstellung der letzten Aktionen
+
+### Network Requests
+
+- **Fetch & XHR** - Erfasst alle Netzwerkanfragen
+- **Status-Tracking** - Zeigt erfolgreiche und fehlgeschlagene Requests
+- **Error-Details** - Speichert Fehlerinformationen bei fehlgeschlagenen Requests
+- **Request-Body** - Erfasst gesendete Daten (ohne sensitive Inhalte)
 
 ### Linear Integration
 
@@ -193,30 +201,46 @@ const {
 
 ## Konfigurationsoptionen
 
-| Option              | Typ       | Standard                | Beschreibung                     |
-|---------------------|-----------|-------------------------|----------------------------------|
-| `enabled`           | `boolean` | `true`                  | Komplettes Modul aktivieren      |
-| `ui`                | `boolean` | `true`                  | @nuxt/ui Installation aktivieren |
-| `linearApiKey`      | `string`  | -                       | Linear API Key (erforderlich)    |
-| `linearTeamName`    | `string`  | -                       | Linear Team Name oder Key        |
-| `linearProjectName` | `string`  | -                       | Linear Projekt Name (optional)   |
-| `autoShow`          | `boolean` | `true`                  | Automatische Anzeige des Buttons |
-| `position`          | `string`  | `'bottom-right'`        | Button-Position                  |
-| `buttonColor`       | `string`  | `'#ef4444'`             | Button-Farbe                     |
-| `buttonText`        | `string`  | `'Fehler melden'`       | Button-Text                      |
-| `buttonIcon`        | `string`  | `'i-heroicons-bug-ant'` | Button-Icon                      |
-| `enableScreenshot`  | `boolean` | `true`                  | Screenshot-Funktionalität        |
-| `enableBrowserInfo` | `boolean` | `true`                  | Browser-Info-Erfassung           |
-| `enableConsoleLogs` | `boolean` | `true`                  | Console-Log-Erfassung            |
-| `theme`             | `string`  | `'auto'`                | Theme ('light', 'dark', 'auto')  |
-| `maxConsoleLogs`    | `number`  | `50`                    | Maximale Anzahl Console-Logs     |
-| `httpAuth`          | `object`  | -                       | HTTP Basic Auth Credentials      |
+| Option                  | Typ       | Standard         | Beschreibung                          |
+|-------------------------|-----------|------------------|---------------------------------------|
+| `enabled`               | `boolean` | `true`           | Komplettes Modul aktivieren           |
+| `ui`                    | `boolean` | `true`           | @nuxt/ui Installation aktivieren      |
+| `linearApiKey`          | `string`  | -                | Linear API Key (erforderlich)         |
+| `linearTeamName`        | `string`  | -                | Linear Team Name oder Key             |
+| `linearProjectName`     | `string`  | -                | Linear Projekt Name (optional)        |
+| `autoShow`              | `boolean` | `true`           | Automatische Anzeige des Buttons      |
+| `position`              | `string`  | `'bottom-right'` | Button-Position                       |
+| `buttonColor`           | `string`  | `'#ef4444'`      | Button-Farbe                          |
+| `enableScreenshot`      | `boolean` | `true`           | Screenshot-Funktionalität             |
+| `enableBrowserInfo`     | `boolean` | `true`           | Browser-Info-Erfassung                |
+| `enableConsoleLogs`     | `boolean` | `true`           | Console-Log-Erfassung                 |
+| `enableNetworkRequests` | `boolean` | `true`           | Netzwerk-Request-Erfassung            |
+| `enableUserJourney`     | `boolean` | `true`           | User Journey Tracking                 |
+| `enableErrorBoundary`   | `boolean` | `true`           | Error Boundary Komponente             |
+| `autoOpenOnError`       | `boolean` | `false`          | Modal bei JS-Fehlern öffnen           |
+| `theme`                 | `string`  | `'auto'`         | Theme ('light', 'dark', 'auto')       |
+| `maxConsoleLogs`        | `number`  | `50`             | Maximale Anzahl Console-Logs          |
+| `maxNetworkRequests`    | `number`  | `50`             | Maximale Anzahl Network-Requests      |
+| `userJourney`           | `object`  | siehe unten      | User Journey Konfiguration            |
+
+### User Journey Optionen
+
+| Option                    | Typ       | Standard | Beschreibung                    |
+|---------------------------|-----------|----------|---------------------------------|
+| `enabled`                 | `boolean` | `true`   | User Journey aktivieren         |
+| `maxEvents`               | `number`  | `50`     | Maximale Anzahl Events          |
+| `captureClicks`           | `boolean` | `true`   | Klick-Events erfassen           |
+| `captureNavigation`       | `boolean` | `true`   | Navigation erfassen             |
+| `captureFormInteractions` | `boolean` | `true`   | Formular-Events erfassen        |
+| `captureKeyboard`         | `boolean` | `true`   | Keyboard-Events erfassen        |
+| `captureErrors`           | `boolean` | `true`   | Fehler erfassen                 |
+| `captureModalEvents`      | `boolean` | `true`   | Modal-Events erfassen           |
+| `throttleRate`            | `number`  | `100`    | Throttle-Rate in ms             |
 
 ## Voraussetzungen
 
 - **Nuxt 4.0+**
 - **Linear API Key** mit write-Berechtigung
-- **Google Chrome 111+** für Screenshots
 
 ## Entwicklung
 

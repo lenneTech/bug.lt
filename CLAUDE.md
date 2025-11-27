@@ -10,15 +10,21 @@ This is **Bug LT** - a comprehensive Nuxt 4 module for bug reporting with Linear
 
 ### Module Structure
 - **Core Module**: `src/module.ts` - Main Nuxt module definition with configuration options
-- **Runtime Components**: Vue components for UI (`BugReportButton`, `BugReportModal`, `BugReportForm`)
+- **Runtime Components**: Vue components for UI (`BugReportButton`, `BugReportModal`, `BugReportForm`, `UserJourneyTimeline`, `ErrorBoundary`)
 - **Composables**: `useBugReport()` - Main state management and API interactions
-- **Server API**: H3 handlers for bug report submission and screenshot generation
+- **Server API**: H3 handler for bug report submission
 - **Linear Integration**: Complete GraphQL client for Linear API with team/project resolution
-- **Utilities**: Browser info collection, console log capture, screenshot generation
+- **Utilities**: Browser info collection, console log capture, network request tracking, user journey tracking, screenshot generation
 
 ### Critical Technical Details
 
-**Screenshot Implementation**: Uses server-side Puppeteer with system Chrome (not bundled) to support modern CSS features like OKLCH colors. Requires Chrome 111+ via `CHROME_EXECUTABLE_PATH` environment variable.
+**Screenshot Implementation**: Uses client-side `modern-screenshot` library for DOM-to-PNG capture. No server or Chrome required. Captures current viewport with scroll position via `features.restoreScrollPosition: true`.
+
+**User Journey Tracking**: Captures user interactions (clicks, navigation, form interactions, keyboard events, errors) with element identification and timestamps. Configurable via `userJourney` options.
+
+**Network Request Tracking**: Intercepts Fetch and XHR requests to capture URLs, methods, status codes, and error details. Limited to `maxNetworkRequests` entries.
+
+**Console Log Capture**: Intercepts console methods and cleans CSS styling (`%c` format) for clean output in bug tickets.
 
 **Linear API Integration**: 
 - Team/Project resolution by name instead of UUIDs
@@ -65,9 +71,7 @@ Required environment variables for full functionality:
 # Linear API (required for bug reporting)
 LINEAR_API_KEY=lin_api_...
 LINEAR_TEAM_NAME=Entwicklung
-
-# Chrome path (required for screenshots)
-CHROME_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+LINEAR_PROJECT_NAME=Website  # optional
 ```
 
 ## Key Implementation Patterns
@@ -104,13 +108,15 @@ Requires `NPM_TOKEN` secret in GitHub repository settings.
 ## Module Dependencies
 
 - **@nuxt/ui**: All UI components (UButton, UModal, UForm, etc.)
-- **puppeteer**: Server-side screenshot generation
+- **modern-screenshot**: Client-side DOM-to-PNG screenshot capture
 - **h3**: Server API endpoints
 - **@nuxt/kit**: Module development utilities
 
 ## Common Issues
 
-**Screenshots not working**: Check Chrome path and version (111+ required for OKLCH)
+**Screenshots not capturing scroll position**: Ensure `features.restoreScrollPosition: true` is set in screenshot options
+**Screenshot blank or missing elements**: Some external images may fail due to CORS - the library uses placeholders for failed images
 **Modal won't close**: Ensure modal instance cleanup in composable
 **Linear API 400**: Usually missing headers in file upload or incorrect GraphQL schema
 **Labels not created**: Verify team resolution and API permissions
+**Console logs have CSS artifacts**: The consoleLogs utility cleans `%c` styles, but complex logging may need review
