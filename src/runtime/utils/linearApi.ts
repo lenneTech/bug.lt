@@ -384,77 +384,49 @@ export class LinearApiClient {
 export const formatBugReportForLinear = (bugReport: BugReportData): Partial<LinearIssueData> => {
   const sections: string[] = []
 
-  // Description
+  // === SECTION 1: Bug Report (most important, always first) ===
+  const bugReportParts: string[] = []
+
   if (bugReport.description) {
-    sections.push(`## Description\n${bugReport.description}`)
+    bugReportParts.push(`**Beschreibung:**\n${bugReport.description}`)
   }
 
-  // Expected Behavior
   if (bugReport.expectedBehavior) {
-    sections.push(`## Expected Behavior\n${bugReport.expectedBehavior}`)
+    bugReportParts.push(`**Erwartetes Verhalten:**\n${bugReport.expectedBehavior}`)
   }
 
-  // Steps to Reproduce
   if (bugReport.stepsToReproduce) {
-    sections.push(`## Steps to Reproduce\n${bugReport.stepsToReproduce}`)
+    bugReportParts.push(`**Schritte zur Reproduktion:**\n${bugReport.stepsToReproduce}`)
   }
 
-  // Browser Info
+  if (bugReportParts.length > 0) {
+    sections.push(`## Bug Report\n\n${bugReportParts.join('\n\n')}`)
+  }
+
+  // === SECTION 2: Context (compact browser info) ===
   if (bugReport.browserInfo) {
     const info = bugReport.browserInfo
-    const browserSection = `## Browser Information
-- **URL**: ${info.url}
-- **User Agent**: ${info.userAgent}
-- **Platform**: ${info.platform}
-- **Language**: ${info.language}
-- **Viewport**: ${info.viewport.width}x${info.viewport.height}
-- **Screen**: ${info.screen.width}x${info.screen.height}
-- **Timestamp**: ${info.timestamp}`
+    const browserName = info.browser?.name || 'Unknown'
+    const browserVersion = info.browser?.version || ''
+    const osName = info.os?.name || info.platform || 'Unknown'
+    const osVersion = info.os?.version || ''
 
-    sections.push(browserSection)
+    const contextSection = `---
+
+## Kontext
+
+| | |
+|---|---|
+| **URL** | ${info.url} |
+| **Browser** | ${browserName} ${browserVersion} |
+| **OS** | ${osName} ${osVersion} |
+| **Viewport** | ${info.viewport.width}x${info.viewport.height} |
+| **Zeitpunkt** | ${info.timestamp} |`
+
+    sections.push(contextSection)
   }
 
-  // Console Logs
-  if (bugReport.consoleLogs && bugReport.consoleLogs.length > 0) {
-    const logsSection = `## Logs
-\`\`\`
-${bugReport.consoleLogs
-  .slice(-10) // Only include last 10 logs
-  .map(log => `[${log.timestamp}] ${log.level.toUpperCase()}: ${log.message.join(' ')}`)
-  .join('\n')}
-\`\`\``
-
-    sections.push(logsSection)
-  }
-
-  // Network Requests
-  if (bugReport.networkRequests && bugReport.networkRequests.length > 0) {
-    const requests = bugReport.networkRequests.slice(-10) // Only include last 10 requests
-
-    const networkSection = `## Network Requests (Last ${requests.length})
-
-| Method | URL | Status | Duration |
-|--------|-----|--------|----------|
-${requests.map((req) => {
-  const url = req.url.length > 80 ? req.url.substring(0, 77) + '...' : req.url
-  const status = req.status === 0 ? 'ERR' : req.status
-  const duration = req.duration ? `${req.duration}ms` : 'N/A'
-  return `| ${req.method} | ${url} | ${status} | ${duration} |`
-}).join('\n')}
-
-**Failed Requests:**
-${requests.filter(req => req.status >= 400 || req.status === 0).map((req) => {
-  const errorInfo = [`- **${req.method} ${req.url}**`]
-  errorInfo.push(`  - Status: ${req.status} ${req.statusText}`)
-  if (req.error) errorInfo.push(`  - Error: ${req.error}`)
-  if (req.responseBody) errorInfo.push(`  - Response: \`${req.responseBody.substring(0, 200)}${req.responseBody.length > 200 ? '...' : ''}\``)
-  return errorInfo.join('\n')
-}).join('\n') || '*No failed requests*'}`
-
-    sections.push(networkSection)
-  }
-
-  // User Journey / Interaction Timeline
+  // === SECTION 3: User Journey (important for reproduction) ===
   if (bugReport.userInteractions && bugReport.userInteractions.length > 0) {
     const interactions = bugReport.userInteractions
 
@@ -468,60 +440,112 @@ ${requests.filter(req => req.status >= 400 || req.status === 0).map((req) => {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        fractionalSecondDigits: 3,
       })
     }
 
-    const formatMetadata = (metadata: any): string => {
+    const formatDetails = (event: typeof interactions[0]): string => {
+      const metadata = event.metadata
       if (!metadata) return ''
 
-      const parts: string[] = []
+      if (metadata.toUrl) return `→ ${metadata.toUrl.substring(0, 50)}`
+      if (metadata.text) return metadata.text.substring(0, 40)
+      if (metadata.errorMessage) return `Error: ${metadata.errorMessage.substring(0, 40)}`
+      if (metadata.key) return `Key: ${metadata.key}`
 
-      if (metadata.text) {
-        parts.push(metadata.text.substring(0, 40))
-      }
-      if (metadata.value) {
-        parts.push(`Value: ${metadata.value}`)
-      }
-      if (metadata.url) {
-        parts.push(metadata.url.substring(0, 60))
-      }
-      if (metadata.toUrl) {
-        parts.push(`→ ${metadata.toUrl.substring(0, 60)}`)
-      }
-      if (metadata.scrollPosition !== undefined) {
-        parts.push(`Scroll: ${metadata.scrollPosition}px`)
-      }
-      if (metadata.key) {
-        parts.push(`Key: ${metadata.key}`)
-      }
-      if (metadata.errorMessage) {
-        parts.push(`Error: ${metadata.errorMessage.substring(0, 50)}`)
-      }
-
-      return parts.join(' | ')
+      return ''
     }
 
-    const userJourneySection = `## User Journey Timeline (${interactions.length} Events)
+    const userJourneySection = `---
 
-| Time | Event Type | Target | Details |
-|------|------------|--------|---------|
+## User Journey
+
+> Letzte ${interactions.length} Aktionen vor dem Bug
+
+| Zeit | Aktion | Element | Details |
+|------|--------|---------|---------|
 ${interactions.map((event) => {
   const time = formatTimestamp(event.timestamp)
   const type = formatEventType(event.type)
-  const target = event.target.length > 50 ? event.target.substring(0, 47) + '...' : event.target
-  const details = formatMetadata(event.metadata)
-  const detailsFormatted = details.length > 60 ? details.substring(0, 57) + '...' : details
-  return `| ${time} | ${type} | ${target} | ${detailsFormatted} |`
+  const target = event.target.length > 40 ? event.target.substring(0, 37) + '...' : event.target
+  const details = formatDetails(event)
+  return `| ${time} | ${type} | ${target} | ${details} |`
 }).join('\n')}`
 
     sections.push(userJourneySection)
   }
 
-  // Add attachments note if present
+  // === SECTION 4: Technical Details (collapsible) ===
+  const technicalParts: string[] = []
+
+  // Console Logs in <details>
+  if (bugReport.consoleLogs && bugReport.consoleLogs.length > 0) {
+    const logs = bugReport.consoleLogs.slice(-10)
+    const logsContent = logs
+      .map(log => `[${log.timestamp}] ${log.level.toUpperCase()}: ${log.message.join(' ')}`)
+      .join('\n')
+
+    technicalParts.push(`<details>
+<summary>Console Logs (${logs.length})</summary>
+
+\`\`\`
+${logsContent}
+\`\`\`
+
+</details>`)
+  }
+
+  // Network Requests in <details>
+  if (bugReport.networkRequests && bugReport.networkRequests.length > 0) {
+    const requests = bugReport.networkRequests.slice(-10)
+    const failedRequests = requests.filter(req => req.status >= 400 || req.status === 0)
+
+    let networkContent = `| Method | URL | Status |
+|--------|-----|--------|
+${requests.map((req) => {
+  const url = req.url.length > 60 ? req.url.substring(0, 57) + '...' : req.url
+  const status = req.status === 0 ? 'ERR' : req.status
+  return `| ${req.method} | ${url} | ${status} |`
+}).join('\n')}`
+
+    if (failedRequests.length > 0) {
+      networkContent += `\n\n**Fehlerhafte Requests:**\n${failedRequests.map((req) => {
+        return `- ${req.method} ${req.url.substring(0, 60)} → ${req.status} ${req.statusText}`
+      }).join('\n')}`
+    }
+
+    technicalParts.push(`<details>
+<summary>Network Requests (${requests.length})</summary>
+
+${networkContent}
+
+</details>`)
+  }
+
+  if (technicalParts.length > 0) {
+    sections.push(`---
+
+## Technische Details
+
+${technicalParts.join('\n\n')}`)
+  }
+
+  // === SECTION 5: Attachments note ===
   if (bugReport.attachments && bugReport.attachments.length > 0) {
-    const attachmentNames = bugReport.attachments.map(a => a.name).join(', ')
-    sections.push(`## Attachments\n*${bugReport.attachments.length} file(s) attached: ${attachmentNames}*`)
+    const screenshotCount = bugReport.attachments.filter(a => a.isScreenshot).length
+    const otherCount = bugReport.attachments.length - screenshotCount
+
+    let attachmentText = ''
+    if (screenshotCount > 0 && otherCount > 0) {
+      attachmentText = `*${screenshotCount} Screenshot(s) und ${otherCount} weitere Anhänge*`
+    }
+    else if (screenshotCount > 0) {
+      attachmentText = `*${screenshotCount} Screenshot(s) angehängt*`
+    }
+    else {
+      attachmentText = `*${otherCount} Anhänge*`
+    }
+
+    sections.push(`---\n\n${attachmentText}`)
   }
 
   return {

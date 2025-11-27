@@ -4,16 +4,16 @@ import type { UserInteractionEvent, UserJourneyConfig } from '../types'
 const userInteractionHistory: UserInteractionEvent[] = []
 let maxHistorySize = 50
 
-// Configuration
+// Configuration - optimized defaults for bug reporting
 let config: UserJourneyConfig = {
   enabled: true,
   maxEvents: 50,
   captureClicks: true,
   captureNavigation: true,
   captureFormInteractions: true,
-  captureHover: true,
-  captureScroll: true,
-  captureInputChanges: true,
+  captureHover: false, // Disabled: Too noisy, not useful for bug reproduction
+  captureScroll: false, // Disabled: Too noisy, not useful for bug reproduction
+  captureInputChanges: false, // Disabled: form_change captures final values
   captureInputValues: false,
   captureKeyboard: true,
   captureErrors: true,

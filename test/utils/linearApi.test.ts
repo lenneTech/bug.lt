@@ -225,14 +225,22 @@ describe('formatBugReportForLinear', () => {
     const result = formatBugReportForLinear(bugReport)
 
     expect(result.title).toBe('BUG: Test Bug')
-    expect(result.description).toContain('## Description\nBug description')
-    expect(result.description).toContain('## Expected Behavior\nExpected behavior')
-    expect(result.description).toContain('## Steps to Reproduce\nSteps to reproduce')
-    expect(result.description).toContain('## Browser Information')
-    expect(result.description).toContain('**URL**: https://example.com')
-    expect(result.description).toContain('## Logs')
+    // New structure: Bug Report section with German labels
+    expect(result.description).toContain('## Bug Report')
+    expect(result.description).toContain('**Beschreibung:**\nBug description')
+    expect(result.description).toContain('**Erwartetes Verhalten:**\nExpected behavior')
+    expect(result.description).toContain('**Schritte zur Reproduktion:**\nSteps to reproduce')
+    // Compact context section
+    expect(result.description).toContain('## Kontext')
+    expect(result.description).toContain('| **URL** | https://example.com |')
+    expect(result.description).toContain('| **Browser** | Chrome 120.0.0 |')
+    // Technical details in <details> tags
+    expect(result.description).toContain('## Technische Details')
+    expect(result.description).toContain('<details>')
+    expect(result.description).toContain('<summary>Console Logs (1)</summary>')
     expect(result.description).toContain('[2024-01-01T00:00:00.000Z] ERROR: Test error')
-    expect(result.description).toContain('## Attachments\n*1 file(s) attached: screenshot.png*')
+    // Attachments note
+    expect(result.description).toContain('*1 Screenshot(s) angehängt*')
   })
 
   it('should handle minimal bug report', () => {
@@ -245,6 +253,7 @@ describe('formatBugReportForLinear', () => {
     const result = formatBugReportForLinear(bugReport)
 
     expect(result.title).toBe('FEATURE: Minimal Bug')
-    expect(result.description).toBe('## Description\nSimple description')
+    expect(result.description).toContain('## Bug Report')
+    expect(result.description).toContain('**Beschreibung:**\nSimple description')
   })
 })

@@ -4,6 +4,55 @@ import type { ConsoleLogEntry } from '../types'
 const consoleLogHistory: ConsoleLogEntry[] = []
 const maxHistorySize = 1000
 
+/**
+ * Remove CSS styling from console log messages
+ * Handles %c format specifiers and their corresponding CSS style arguments
+ */
+function cleanConsoleMessage(arg: unknown): string {
+  if (typeof arg !== 'string') {
+    if (arg instanceof Error) {
+      return arg.message
+    }
+    try {
+      return JSON.stringify(arg, null, 2)
+    }
+    catch {
+      return String(arg)
+    }
+  }
+
+  // Remove %c placeholders from the message
+  let cleaned: string = arg.replace(/%c/g, '')
+
+  // Clean up extra whitespace
+  cleaned = cleaned.replace(/\s+/g, ' ').trim()
+
+  return cleaned
+}
+
+/**
+ * Check if a string looks like a CSS style (used with %c)
+ */
+function isCssStyleString(arg: unknown): boolean {
+  if (typeof arg !== 'string') {
+    return false
+  }
+
+  // CSS style strings typically contain these properties
+  const cssPatterns: RegExp[] = [
+    /background\s*:/i,
+    /color\s*:/i,
+    /font-weight\s*:/i,
+    /padding\s*:/i,
+    /border-radius\s*:/i,
+    /font-size\s*:/i,
+    /margin\s*:/i,
+    /text-decoration\s*:/i,
+  ]
+
+  return cssPatterns.some(pattern => pattern.test(arg))
+}
+
 // Original console methods
 const originalConsole = {
   log: console.log,
@@ -22,16 +71,11 @@ export const initializeConsoleLogging = (): void => {
   isInitialized = true
 
   const createLogEntry = (level: ConsoleLogEntry['level'], args: any[]): ConsoleLogEntry => {
-    const messages = args.map((arg) => {
-      if (typeof arg === 'string') return arg
-      if (arg instanceof Error) return arg.message
-      try {
-        return JSON.stringify(arg, null, 2)
-      }
-      catch {
-        return String(arg)
-      }
-    })
+    // Filter out CSS style strings and clean messages
+    const messages: string[] = args
+      .filter(arg => !isCssStyleString(arg))
+      .map(arg => cleanConsoleMessage(arg))
+      .filter(msg => msg.length > 0)
 
     const entry: ConsoleLogEntry = {
       level,
