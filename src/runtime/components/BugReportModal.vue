@@ -49,22 +49,24 @@ const triggerSubmit = () => {
     </template>
 
     <template #footer>
-      <UButton
-        color="neutral"
-        variant="outline"
-        :disabled="isSubmitting"
-        @click="emit('close', false)"
-      >
-        Abbrechen
-      </UButton>
-      <UButton
-        color="error"
-        :loading="isSubmitting"
-        :disabled="!formRef?.isValid"
-        @click="triggerSubmit"
-      >
-        Senden
-      </UButton>
+      <div class="flex items-center justify-between">
+        <UButton
+          color="neutral"
+          variant="outline"
+          :disabled="isSubmitting"
+          @click="emit('close', false)"
+        >
+          Abbrechen
+        </UButton>
+        <UButton
+          color="error"
+          :loading="isSubmitting"
+          :disabled="!formRef?.isValid"
+          @click="triggerSubmit"
+        >
+          Senden
+        </UButton>
+      </div>
     </template>
   </UModal>
 </template>
