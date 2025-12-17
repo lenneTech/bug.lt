@@ -14,7 +14,9 @@ function cleanConsoleMessage(arg: unknown): string {
       return arg.message
     }
     try {
-      return JSON.stringify(arg, null, 2)
+      const stringified = JSON.stringify(arg, null, 2)
+      // JSON.stringify returns undefined for undefined, functions, and symbols
+      return stringified ?? String(arg)
     }
     catch {
       return String(arg)
