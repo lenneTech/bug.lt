@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.3](https://github.com/lenneTech/bug.lt/compare/v1.6.2...v1.6.3) (2025-12-17)
+
+### 🐛 Bug Fixes
+
+* update button styles and improve form submission handling in BugReport components ([73ce944](https://github.com/lenneTech/bug.lt/commit/73ce944cff2574801ae430409804f521db430cca))
+
 ## [1.6.2](https://github.com/lenneTech/bug.lt/compare/v1.6.1...v1.6.2) (2025-12-17)
 
 ### 🐛 Bug Fixes
