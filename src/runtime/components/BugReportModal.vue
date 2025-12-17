@@ -49,7 +49,7 @@ const triggerSubmit = () => {
     </template>
 
     <template #footer>
-      <div class="flex items-center justify-between">
+      <div class="w-full flex items-center justify-between">
         <UButton
           color="neutral"
           variant="outline"
