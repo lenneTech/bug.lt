@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.2](https://github.com/lenneTech/bug.lt/compare/v1.6.1...v1.6.2) (2025-12-17)
+
+### 🐛 Bug Fixes
+
+* handle undefined, functions, and symbols in cleanConsoleMessage ([f2efc88](https://github.com/lenneTech/bug.lt/commit/f2efc88d7aee3a45b84a2f19edb76cfd615715ff))
+
 ## [1.6.1](https://github.com/lenneTech/bug.lt/compare/v1.6.0...v1.6.1) (2025-11-27)
 
 ### 🐛 Bug Fixes
