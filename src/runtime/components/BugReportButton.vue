@@ -54,7 +54,7 @@ const config = computed(() => ({
 }))
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'fixed z-[9999] cursor-pointer shadow-lg flex gap-3 hover:shadow-xl transition-all duration-200 rounded-full'
+  const baseClasses = 'ring-0 fixed z-[9999] cursor-pointer shadow-lg flex gap-3 hover:shadow-xl transition-all duration-200 rounded-full'
 
   const positionClasses = {
     'bottom-right': 'bottom-4 right-4',

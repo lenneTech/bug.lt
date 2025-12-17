@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useBugReport } from '../composables/useBugReport'
 import type { BugReportData } from '../types'
 import BugReportForm from './BugReportForm.vue'
@@ -6,6 +7,7 @@ import BugReportForm from './BugReportForm.vue'
 const emit = defineEmits<{ close: [boolean] }>()
 
 const { submitBugReport, isSubmitting, error } = useBugReport()
+const formRef = ref<InstanceType<typeof BugReportForm> | null>(null)
 
 const clearError = () => {
   error.value = null
@@ -14,6 +16,10 @@ const clearError = () => {
 const handleSubmit = async (data: BugReportData) => {
   await submitBugReport(data)
   emit('close', true)
+}
+
+const triggerSubmit = () => {
+  formRef.value?.submit()
 }
 </script>
 
@@ -35,11 +41,30 @@ const handleSubmit = async (data: BugReportData) => {
         />
 
         <BugReportForm
+          ref="formRef"
           :is-submitting="isSubmitting"
           @submit="handleSubmit"
-          @cancel="emit('close', false)"
         />
       </div>
+    </template>
+
+    <template #footer>
+      <UButton
+        color="neutral"
+        variant="outline"
+        :disabled="isSubmitting"
+        @click="emit('close', false)"
+      >
+        Abbrechen
+      </UButton>
+      <UButton
+        color="error"
+        :loading="isSubmitting"
+        :disabled="!formRef?.isValid"
+        @click="triggerSubmit"
+      >
+        Senden
+      </UButton>
     </template>
   </UModal>
 </template>

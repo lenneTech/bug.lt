@@ -108,6 +108,8 @@ const removeAttachment = (id: string) => {
 
 const hasScreenshot = computed(() => attachments.value.some(a => a.isScreenshot))
 
+const isValid = computed(() => !!state.title && !!state.type && !!state.description)
+
 const onSubmit = async () => {
   const serializedAttachments = attachments.value.map(attachment => ({
     id: attachment.id,
@@ -147,6 +149,11 @@ const onSubmit = async () => {
 
   emit('submit', data)
 }
+
+defineExpose({
+  submit: onSubmit,
+  isValid,
+})
 </script>
 
 <template>
@@ -336,35 +343,25 @@ const onSubmit = async () => {
     </UAccordion>
 
     <!-- User Journey Timeline Preview -->
-    <div
+    <UCollapsible
       v-if="config?.enableUserJourney && includeUserJourney && userJourneyEvents.length > 0"
-      class="space-y-2"
+      class="flex flex-col gap-2"
     >
-      <label class="text-sm font-medium text-gray-700 dark:text-gray-200">
-        User Journey Preview ({{ userJourneyEvents.length }} Events)
-      </label>
-      <UserJourneyTimeline :events="userJourneyEvents" />
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex justify-end gap-3 pt-4">
       <UButton
+        class="group"
+        :label="`User Journey Preview (${userJourneyEvents.length} Events)`"
         color="neutral"
-        variant="outline"
-        :disabled="isSubmitting"
-        @click="$emit('cancel')"
-      >
-        Abbrechen
-      </UButton>
-      <UButton
-        type="submit"
-        loading-auto
-        color="error"
-        :loading="isSubmitting"
-        :disabled="!state.title || !state.type || !state.description"
-      >
-        Senden
-      </UButton>
-    </div>
+        variant="ghost"
+        trailing-icon="i-lucide-chevron-down"
+        :ui="{
+          trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
+        }"
+        block
+      />
+
+      <template #content>
+        <UserJourneyTimeline :events="userJourneyEvents" />
+      </template>
+    </UCollapsible>
   </UForm>
 </template>
