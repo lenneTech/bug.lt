@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.5](https://github.com/lenneTech/bug.lt/compare/v1.6.4...v1.6.5) (2025-12-17)
+
+### 🐛 Bug Fixes
+
+* update button base classes in BugReportButton and adjust footer layout in BugReportModal ([4b8f6a5](https://github.com/lenneTech/bug.lt/commit/4b8f6a5512aafbb0940f48b3e95068c514d7f4f2))
+
 ## [1.6.4](https://github.com/lenneTech/bug.lt/compare/v1.6.3...v1.6.4) (2025-12-17)
 
 ### 🐛 Bug Fixes
