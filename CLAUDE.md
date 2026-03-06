@@ -69,9 +69,9 @@ Required environment variables for full functionality:
 
 ```bash
 # Linear API (required for bug reporting)
-LINEAR_API_KEY=lin_api_...
-LINEAR_TEAM_NAME=Entwicklung
-LINEAR_PROJECT_NAME=Website  # optional
+NUXT_LINEAR_API_KEY=lin_api_...
+NUXT_LINEAR_TEAM_NAME=Entwicklung
+NUXT_LINEAR_PROJECT_NAME=Website  # optional
 ```
 
 ## Key Implementation Patterns
