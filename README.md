@@ -45,9 +45,9 @@ export default defineNuxtConfig({
     ui: true, // false deaktiviert @nuxt/ui Installation
 
     // Linear Integration
-    linearApiKey: process.env.LINEAR_API_KEY,
-    linearTeamName: 'Entwicklung', // Team-Name oder Key
-    linearProjectName: 'Website', // Projekt-Name (optional)
+    linearApiKey: process.env.NUXT_LINEAR_API_KEY,
+    linearTeamName: process.env.NUXT_LINEAR_TEAM_NAME || 'Entwicklung',
+    linearProjectName: process.env.NUXT_LINEAR_PROJECT_NAME, // optional
 
     // UI Konfiguration
     autoShow: true,
@@ -83,18 +83,18 @@ export default defineNuxtConfig({
 
 ### 2. Umgebungsvariablen
 
-Erstelle eine `.env` Datei:
+Erstelle eine `.env` Datei (zuvor hießen die Variablen `LINEAR_API_KEY`, `LINEAR_TEAM_NAME`, `LINEAR_PROJECT_NAME` — bitte umbenennen):
 
 ```bash
 # Linear API Konfiguration (erforderlich)
 # Hole dir deinen API Key aus Linear Settings -> API
-LINEAR_API_KEY=lin_api_...
+NUXT_LINEAR_API_KEY=lin_api_...
 
 # Linear Team Name oder Key (erforderlich)
-LINEAR_TEAM_NAME=Entwicklung
+NUXT_LINEAR_TEAM_NAME=Entwicklung
 
 # Linear Projekt Name (optional)
-LINEAR_PROJECT_NAME=Website
+NUXT_LINEAR_PROJECT_NAME=Website
 ```
 
 ## Verwendung

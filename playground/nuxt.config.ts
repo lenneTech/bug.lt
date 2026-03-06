@@ -7,9 +7,9 @@ export default defineNuxtConfig({
   // Bug Report Module Configuration
   bug: {
     // Linear API configuration (set via environment variables)
-    linearApiKey: process.env.LINEAR_API_KEY,
-    linearTeamName: process.env.LINEAR_TEAM_NAME,
-    linearProjectName: process.env.LINEAR_PROJECT_NAME,
+    linearApiKey: process.env.NUXT_LINEAR_API_KEY,
+    linearTeamName: process.env.NUXT_LINEAR_TEAM_NAME,
+    linearProjectName: process.env.NUXT_LINEAR_PROJECT_NAME,
 
     // UI Configuration
     autoShow: true,
@@ -27,10 +27,10 @@ export default defineNuxtConfig({
 
     // HTTP Basic Authentication (optional)
     // For pages behind htaccess/HTTP Auth
-    httpAuth: process.env.HTTP_AUTH_USERNAME && process.env.HTTP_AUTH_PASSWORD
+    httpAuth: process.env.NUXT_HTTP_AUTH_USERNAME && process.env.NUXT_HTTP_AUTH_PASSWORD
       ? {
-          username: process.env.HTTP_AUTH_USERNAME,
-          password: process.env.HTTP_AUTH_PASSWORD,
+          username: process.env.NUXT_HTTP_AUTH_USERNAME,
+          password: process.env.NUXT_HTTP_AUTH_PASSWORD,
         }
       : undefined,
   },
