@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.6](https://github.com/lenneTech/bug.lt/compare/v1.6.5...v1.6.6) (2026-03-06)
+
+### ♻️ Code Refactoring
+
+* migrate env vars to NUXT_ prefix convention ([b4f9356](https://github.com/lenneTech/bug.lt/commit/b4f9356b9d45f592e9ea49db32b7f695df4e08da))
+
 ## [1.6.5](https://github.com/lenneTech/bug.lt/compare/v1.6.4...v1.6.5) (2025-12-17)
 
 ### 🐛 Bug Fixes
