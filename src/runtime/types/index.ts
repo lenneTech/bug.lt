@@ -165,6 +165,7 @@ export interface BugReportConfig {
   linearApiKey?: string
   linearTeamName?: string
   linearProjectName?: string
+  endpoint?: string
   autoShow?: boolean
   position?: BugReportPosition
   buttonColor?: string

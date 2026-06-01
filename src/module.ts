@@ -22,6 +22,18 @@ export interface ModuleOptions {
    */
   ui?: boolean
 
+  /**
+   * Server route the bug report is submitted to (server handler + client `$fetch`).
+   *
+   * Defaults to a non-`/api` path on purpose: consuming apps very commonly proxy
+   * every `/api/...` request to a separate backend (via Nitro `routeRules`). Such a
+   * catch-all would swallow `/api/bug-report` and forward it to the backend (404),
+   * so this module's own handler would never run. Keep the default outside `/api`
+   * (Nuxt-internal `_`-prefix style) unless you have a dedicated rule for it.
+   * @defaultValue `'/_bug-lt/report'`
+   */
+  endpoint?: string
+
   // Linear Integration
   linearApiKey?: string
   linearTeamName?: string
@@ -83,6 +95,8 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     enabled: true,
     ui: true,
+    // Off `/api/` so consumer `/api/**` proxies (Nitro routeRules) don't swallow it
+    endpoint: '/_bug-lt/report',
     autoShow: true,
     position: 'bottom-right',
     buttonColor: '#ef4444',
@@ -137,6 +151,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.bugLt = {
       enabled: options.enabled,
       ui: options.ui,
+      endpoint: options.endpoint,
       autoShow: options.autoShow,
       position: options.position,
       buttonColor: options.buttonColor,
@@ -201,9 +216,11 @@ export default defineNuxtModule<ModuleOptions>({
       from: resolver.resolve('./runtime/composables/useBugReport'),
     })
 
-    // Add server API endpoints
+    // Add server API endpoint.
+    // Route comes from `options.endpoint` (default `/_bug-lt/report`) so it sits
+    // outside `/api/**` and isn't swallowed by consumer `/api/**` proxies.
     addServerHandler({
-      route: '/api/bug-report',
+      route: options.endpoint,
       handler: resolver.resolve('./runtime/server/api/bug-report.post'),
       method: 'post',
     })

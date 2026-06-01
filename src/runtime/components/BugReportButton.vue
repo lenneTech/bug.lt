@@ -71,30 +71,39 @@ const buttonClasses = computed(() => {
 </script>
 
 <template>
-  <Teleport to="body">
-    <UButton
-      v-if="config.autoShow"
-      :class="buttonClasses"
-      :style="`background-color: ${config.buttonColor}; color: white;`"
-      size="lg"
-      variant="solid"
-      :loading="capturingScreenshot"
-      @click="handleOpenModal"
-    >
-      <img
-        v-if="!config.buttonIcon && !config.buttonText"
-        :src="iconPng"
-        class="w-7 h-7 p-1"
-        alt="Bug Report"
+  <!--
+    Client-only on purpose: this floating button is a pure client-side UI overlay.
+    Nuxt UI's UButton resolves to a NuxtLink with `to=undefined`, which renders an
+    `<a>` during SSR but mismatches on hydration -> "Failed to resolve component:
+    RouterLink" + hydration-mismatch warnings on every page. Rendering it only on
+    the client avoids the SSR/hydration mismatch entirely.
+  -->
+  <ClientOnly>
+    <Teleport to="body">
+      <UButton
+        v-if="config.autoShow"
+        :class="buttonClasses"
+        :style="`background-color: ${config.buttonColor}; color: white;`"
+        size="lg"
+        variant="solid"
+        :loading="capturingScreenshot"
+        @click="handleOpenModal"
       >
-      <UIcon
-        v-else-if="config.buttonIcon"
-        :name="config.buttonIcon"
-        class="w-6 h-6"
-      />
-      <div v-if="config.buttonText">
-        {{ capturingScreenshot ? 'Screenshot...' : config.buttonText }}
-      </div>
-    </UButton>
-  </Teleport>
+        <img
+          v-if="!config.buttonIcon && !config.buttonText"
+          :src="iconPng"
+          class="w-7 h-7 p-1"
+          alt="Bug Report"
+        >
+        <UIcon
+          v-else-if="config.buttonIcon"
+          :name="config.buttonIcon"
+          class="w-6 h-6"
+        />
+        <div v-if="config.buttonText">
+          {{ capturingScreenshot ? 'Screenshot...' : config.buttonText }}
+        </div>
+      </UButton>
+    </Teleport>
+  </ClientOnly>
 </template>
