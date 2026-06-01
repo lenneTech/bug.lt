@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.7](https://github.com/lenneTech/bug.lt/compare/v1.6.6...v1.6.7) (2026-06-01)
+
+### 🐛 Bug Fixes
+
+* bug-report endpoint /api collision (DEV-2114) + BugReportButton hydration (DEV-2017) ([#2](https://github.com/lenneTech/bug.lt/issues/2)) ([14b8d6b](https://github.com/lenneTech/bug.lt/commit/14b8d6b297aa024b6c080970730ca20137938616))
+
 ## [1.6.6](https://github.com/lenneTech/bug.lt/compare/v1.6.5...v1.6.6) (2026-03-06)
 
 ### ♻️ Code Refactoring
