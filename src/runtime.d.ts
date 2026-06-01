@@ -15,6 +15,7 @@ declare module '@nuxt/schema' {
     bugLt: {
       enabled?: boolean
       ui?: boolean
+      endpoint?: string
       autoShow?: boolean
       position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
       buttonColor?: string

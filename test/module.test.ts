@@ -30,6 +30,7 @@ describe('Bug LT Module', () => {
     expect(module.defaults).toEqual({
       enabled: true,
       ui: true,
+      endpoint: '/_bug-lt/report',
       autoShow: true,
       position: 'bottom-right',
       buttonColor: '#ef4444',
@@ -123,12 +124,16 @@ describe('Bug LT Module', () => {
       },
     }
 
-    const mockOptions: ModuleOptions = {}
+    // setup() is called directly here, bypassing defineNuxtModule's default merge,
+    // so pass the endpoint explicitly to mirror the resolved default option.
+    const mockOptions: ModuleOptions = { endpoint: '/_bug-lt/report' }
 
     await module.setup(mockOptions, mockNuxt)
 
+    // Route must come from options.endpoint (off `/api/` to dodge consumer proxies),
+    // not the old hardcoded `/api/bug-report`.
     expect(addServerHandler).toHaveBeenCalledWith({
-      route: '/api/bug-report',
+      route: '/_bug-lt/report',
       handler: './runtime/server/api/bug-report.post',
       method: 'post',
     })

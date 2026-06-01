@@ -2,8 +2,12 @@ import { ref } from 'vue'
 import type { BugReportData, ErrorInfo, UseBugReportReturn, UserInteractionEvent } from '../types'
 import { useOverlay } from '#ui/composables/useOverlay'
 import { useToast } from '#ui/composables/useToast'
+import { useRuntimeConfig } from '#imports'
 import BugReportModal from '../components/BugReportModal.vue'
 import { getUserInteractions } from '../utils/userInteractions'
+
+// Fallback must match the module's default `endpoint` option (src/module.ts).
+const DEFAULT_ENDPOINT = '/_bug-lt/report'
 
 // Global state for bug reporting
 const isSubmitting = ref<boolean>(false)
@@ -34,7 +38,10 @@ export const useBugReport = (): UseBugReportReturn => {
     error.value = null
 
     try {
-      const response: any = await $fetch('/api/bug-report', {
+      // Resolve the configured endpoint; must stay in sync with the server handler
+      // route registered in src/module.ts (default: off `/api/` to dodge proxies).
+      const endpoint = useRuntimeConfig().public.bugLt?.endpoint || DEFAULT_ENDPOINT
+      const response: any = await $fetch(endpoint, {
         method: 'POST',
         body: data,
       })

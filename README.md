@@ -44,6 +44,11 @@ export default defineNuxtConfig({
     enabled: true, // false deaktiviert das komplette Modul
     ui: true, // false deaktiviert @nuxt/ui Installation
 
+    // Server-Endpunkt für den Bug-Report (Server-Handler + Client-`$fetch`).
+    // Standard liegt bewusst NICHT unter `/api/`, damit ein `/api/**`-Proxy der
+    // Consumer-App (Nitro `routeRules`) den Request nicht abfängt. Siehe Hinweis unten.
+    endpoint: '/_bug-lt/report',
+
     // Linear Integration
     linearApiKey: process.env.NUXT_LINEAR_API_KEY,
     linearTeamName: process.env.NUXT_LINEAR_TEAM_NAME || 'Entwicklung',
@@ -201,27 +206,38 @@ const {
 
 ## Konfigurationsoptionen
 
-| Option                  | Typ       | Standard         | Beschreibung                          |
-|-------------------------|-----------|------------------|---------------------------------------|
-| `enabled`               | `boolean` | `true`           | Komplettes Modul aktivieren           |
-| `ui`                    | `boolean` | `true`           | @nuxt/ui Installation aktivieren      |
-| `linearApiKey`          | `string`  | -                | Linear API Key (erforderlich)         |
-| `linearTeamName`        | `string`  | -                | Linear Team Name oder Key             |
-| `linearProjectName`     | `string`  | -                | Linear Projekt Name (optional)        |
-| `autoShow`              | `boolean` | `true`           | Automatische Anzeige des Buttons      |
-| `position`              | `string`  | `'bottom-right'` | Button-Position                       |
-| `buttonColor`           | `string`  | `'#ef4444'`      | Button-Farbe                          |
-| `enableScreenshot`      | `boolean` | `true`           | Screenshot-Funktionalität             |
-| `enableBrowserInfo`     | `boolean` | `true`           | Browser-Info-Erfassung                |
-| `enableConsoleLogs`     | `boolean` | `true`           | Console-Log-Erfassung                 |
-| `enableNetworkRequests` | `boolean` | `true`           | Netzwerk-Request-Erfassung            |
-| `enableUserJourney`     | `boolean` | `true`           | User Journey Tracking                 |
-| `enableErrorBoundary`   | `boolean` | `true`           | Error Boundary Komponente             |
-| `autoOpenOnError`       | `boolean` | `false`          | Modal bei JS-Fehlern öffnen           |
-| `theme`                 | `string`  | `'auto'`         | Theme ('light', 'dark', 'auto')       |
-| `maxConsoleLogs`        | `number`  | `50`             | Maximale Anzahl Console-Logs          |
-| `maxNetworkRequests`    | `number`  | `50`             | Maximale Anzahl Network-Requests      |
-| `userJourney`           | `object`  | siehe unten      | User Journey Konfiguration            |
+| Option                  | Typ       | Standard            | Beschreibung                                          |
+|-------------------------|-----------|---------------------|-------------------------------------------------------|
+| `enabled`               | `boolean` | `true`              | Komplettes Modul aktivieren                           |
+| `ui`                    | `boolean` | `true`              | @nuxt/ui Installation aktivieren                      |
+| `endpoint`              | `string`  | `'/_bug-lt/report'` | Server-Route für den Bug-Report (siehe Hinweis unten) |
+| `linearApiKey`          | `string`  | -                   | Linear API Key (erforderlich)                         |
+| `linearTeamName`        | `string`  | -                   | Linear Team Name oder Key                             |
+| `linearProjectName`     | `string`  | -                   | Linear Projekt Name (optional)                        |
+| `autoShow`              | `boolean` | `true`              | Automatische Anzeige des Buttons                      |
+| `position`              | `string`  | `'bottom-right'`    | Button-Position                                       |
+| `buttonColor`           | `string`  | `'#ef4444'`         | Button-Farbe                                          |
+| `enableScreenshot`      | `boolean` | `true`              | Screenshot-Funktionalität                             |
+| `enableBrowserInfo`     | `boolean` | `true`              | Browser-Info-Erfassung                                |
+| `enableConsoleLogs`     | `boolean` | `true`              | Console-Log-Erfassung                                 |
+| `enableNetworkRequests` | `boolean` | `true`              | Netzwerk-Request-Erfassung                            |
+| `enableUserJourney`     | `boolean` | `true`              | User Journey Tracking                                 |
+| `enableErrorBoundary`   | `boolean` | `true`              | Error Boundary Komponente                             |
+| `autoOpenOnError`       | `boolean` | `false`             | Modal bei JS-Fehlern öffnen                           |
+| `theme`                 | `string`  | `'auto'`            | Theme ('light', 'dark', 'auto')                       |
+| `maxConsoleLogs`        | `number`  | `50`                | Maximale Anzahl Console-Logs                          |
+| `maxNetworkRequests`    | `number`  | `50`                | Maximale Anzahl Network-Requests                      |
+| `userJourney`           | `object`  | siehe unten         | User Journey Konfiguration                            |
+
+> [!IMPORTANT]
+> **Warum liegt der Endpunkt nicht unter `/api/`?**
+> Viele Nuxt-Apps leiten *alle* `/api/**`-Requests per Nitro-`routeRules`-Proxy an
+> ein separates Backend weiter. Ein solcher Catch-all würde `/api/bug-report`
+> verschlucken und an das Backend weiterreichen (→ **404**), sodass der Handler
+> dieses Moduls nie ausgeführt wird. Deshalb liegt der Standard-`endpoint` bewusst
+> außerhalb von `/api/` (`/_bug-lt/report`, im Nuxt-internen `_`-Präfix-Stil). Server
+> und Client lesen denselben Wert aus `runtimeConfig.public.bugLt.endpoint` — du
+> kannst ihn frei überschreiben, solange er nicht von einem Proxy abgefangen wird.
 
 ### User Journey Optionen
 
