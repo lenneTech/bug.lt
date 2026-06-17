@@ -85,8 +85,17 @@ export const initializeNetworkMonitoring = (): void => {
   // Intercept fetch
   window.fetch = async (...args: Parameters<typeof fetch>): Promise<Response> => {
     const startTime = Date.now()
-    const url = typeof args[0] === 'string' ? args[0] : args[0].url
-    const options = typeof args[0] === 'string' ? args[1] : args[0]
+    // fetch() accepts string | URL | Request as first arg.
+    // A URL exposes .href (not .url), so mirror the XHR path and resolve all cases.
+    const first = args[0]
+    const url
+      = typeof first === 'string'
+        ? first
+        : first instanceof URL
+          ? first.href
+          : first?.url ?? ''
+    // Options come from args[1] for string/URL inputs; a Request carries them itself.
+    const options = first instanceof Request ? first : args[1]
 
     if (!shouldCaptureUrl(url)) {
       return originalFetch(...args)

@@ -255,4 +255,36 @@ describe('formatBugReportForLinear', () => {
     expect(result.description).toContain('## Bug Report')
     expect(result.description).toContain('**Beschreibung:**\nSimple description')
   })
+
+  // Regression: network requests captured via fetch(new URL(...)) end up with
+  // url: undefined and previously crashed formatBugReportForLinear (issue #3).
+  it('should not throw when a network request has no url', () => {
+    const bugReport = {
+      title: 'repro',
+      type: 'improvement',
+      description: 'repro',
+      networkRequests: [
+        { method: 'GET', status: 200, statusText: 'OK', timestamp: '2026-01-01T00:00:00Z', type: 'fetch' },
+      ],
+    } as unknown as BugReportData
+
+    expect(() => formatBugReportForLinear(bugReport)).not.toThrow()
+    const result = formatBugReportForLinear(bugReport)
+    expect(result.description).toContain('| GET |')
+  })
+
+  // Regression: user interactions without a target (e.g. external/legacy posts)
+  // previously crashed on event.target.length (issue #3).
+  it('should not throw when a user interaction has no target', () => {
+    const bugReport = {
+      title: 'repro',
+      type: 'improvement',
+      description: 'repro',
+      userInteractions: [
+        { type: 'click', timestamp: '2026-01-01T00:00:00Z' },
+      ],
+    } as unknown as BugReportData
+
+    expect(() => formatBugReportForLinear(bugReport)).not.toThrow()
+  })
 })

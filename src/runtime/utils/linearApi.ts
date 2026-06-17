@@ -466,7 +466,8 @@ export const formatBugReportForLinear = (bugReport: BugReportData): Partial<Line
 ${interactions.map((event) => {
   const time = formatTimestamp(event.timestamp)
   const type = formatEventType(event.type)
-  const target = event.target.length > 40 ? event.target.substring(0, 37) + '...' : event.target
+  const rawTarget = event.target ?? ''
+  const target = rawTarget.length > 40 ? rawTarget.substring(0, 37) + '...' : rawTarget
   const details = formatDetails(event)
   return `| ${time} | ${type} | ${target} | ${details} |`
 }).join('\n')}`
@@ -499,14 +500,15 @@ ${logsContent}
     let networkContent = `| Method | URL | Status |
 |--------|-----|--------|
 ${requests.map((req) => {
-  const url = req.url.length > 60 ? req.url.substring(0, 57) + '...' : req.url
+  const rawUrl = req.url ?? ''
+  const url = rawUrl.length > 60 ? rawUrl.substring(0, 57) + '...' : rawUrl
   const status = req.status === 0 ? 'ERR' : req.status
   return `| ${req.method} | ${url} | ${status} |`
 }).join('\n')}`
 
     if (failedRequests.length > 0) {
       networkContent += `\n\n**Fehlerhafte Requests:**\n${failedRequests.map((req) => {
-        return `- ${req.method} ${req.url.substring(0, 60)} → ${req.status} ${req.statusText}`
+        return `- ${req.method} ${(req.url ?? '').substring(0, 60)} → ${req.status} ${req.statusText}`
       }).join('\n')}`
     }
 
