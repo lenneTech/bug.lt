@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.8](https://github.com/lenneTech/bug.lt/compare/v1.6.7...v1.6.8) (2026-06-17)
+
+### 🐛 Bug Fixes
+
+* handle URL/Request objects in fetch interceptor + null-safe Linear formatting ([#3](https://github.com/lenneTech/bug.lt/issues/3)) ([3f76ad1](https://github.com/lenneTech/bug.lt/commit/3f76ad1ade43218936b5be2f46c8b15b034540c1))
+
 ## [1.6.7](https://github.com/lenneTech/bug.lt/compare/v1.6.6...v1.6.7) (2026-06-01)
 
 ### 🐛 Bug Fixes
