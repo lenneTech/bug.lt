@@ -178,21 +178,32 @@ export default defineNuxtModule<ModuleOptions>({
       linearProjectName: options.linearProjectName,
     }
 
+    // Two fully separate runtime variants:
+    // - `ui: true`  -> @nuxt/ui based components/composable/plugin (default).
+    // - `ui: false` -> self-contained variants with their own modal + toast and
+    //   NO `#ui` / `@nuxt/ui` import at all, so the module works in any Nuxt
+    //   project regardless of the styling stack (e.g. Tailwind v3). See issue #5.
+    const useUi = !!options.ui
+
     // Add plugin
     addPlugin({
-      src: resolver.resolve('./runtime/plugins/bug-lt'),
+      src: resolver.resolve(useUi ? './runtime/plugins/bug-lt' : './runtime/plugins/bug-lt.plain'),
       mode: 'client',
     })
 
-    // Add components
+    // Add components (registered under the same public names in both modes)
     addComponent({
       name: 'BugReportButton',
-      filePath: resolver.resolve('./runtime/components/BugReportButton.vue'),
+      filePath: resolver.resolve(useUi
+        ? './runtime/components/BugReportButton.vue'
+        : './runtime/components/plain/BugReportButtonPlain.vue'),
     })
 
     addComponent({
       name: 'BugReportModal',
-      filePath: resolver.resolve('./runtime/components/BugReportModal.vue'),
+      filePath: resolver.resolve(useUi
+        ? './runtime/components/BugReportModal.vue'
+        : './runtime/components/plain/BugReportModalPlain.vue'),
     })
 
     addComponent({
@@ -207,13 +218,17 @@ export default defineNuxtModule<ModuleOptions>({
 
     addComponent({
       name: 'UserJourneyTimeline',
-      filePath: resolver.resolve('./runtime/components/UserJourneyTimeline.vue'),
+      filePath: resolver.resolve(useUi
+        ? './runtime/components/UserJourneyTimeline.vue'
+        : './runtime/components/plain/UserJourneyTimelinePlain.vue'),
     })
 
     // Add composables
     addImports({
       name: 'useBugReport',
-      from: resolver.resolve('./runtime/composables/useBugReport'),
+      from: resolver.resolve(useUi
+        ? './runtime/composables/useBugReport'
+        : './runtime/composables/useBugReport.plain'),
     })
 
     // Add server API endpoint.

@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   bug: {
     // Module Control
     enabled: true, // false deaktiviert das komplette Modul
-    ui: true, // false deaktiviert @nuxt/ui Installation
+    ui: true, // false = eigenständiger Modus ohne @nuxt/ui (siehe unten)
 
     // Server-Endpunkt für den Bug-Report (Server-Handler + Client-`$fetch`).
     // Standard liegt bewusst NICHT unter `/api/`, damit ein `/api/**`-Proxy der
@@ -204,12 +204,38 @@ const {
 - `<BugReportButton />` - Konfigurierbarer Bug-Report-Button
 - `<BugReportModal />` - Modal-Dialog für Bug-Reports
 
+## UI-Modi: @nuxt/ui vs. eigenständig
+
+Das Modul bringt zwei vollständig getrennte UI-Implementierungen mit, gesteuert über die `ui`-Option:
+
+### `ui: true` (Standard)
+
+Button, Modal, Formular und Toasts werden mit [`@nuxt/ui`](https://ui.nuxt.com) gerendert. `@nuxt/ui` wird automatisch installiert und fügt sich nahtlos in das Design einer App ein, die bereits `@nuxt/ui` (Tailwind CSS v4) nutzt.
+
+### `ui: false` (eigenständiger Modus)
+
+Das Modul ist vollständig **self-contained**: eigener Button, eigenes Modal, eigenes Formular und eigene Toasts – komplett **ohne** `@nuxt/ui`-Import. Es wird kein `#ui`-Alias benötigt und `@nuxt/ui` wird **nicht** installiert. Alle Komponenten bringen ihre Styles als `scoped`-CSS mit (Inline-/SVG-Icons), funktionieren also in **jedem** Nuxt-Projekt – unabhängig vom Styling-Stack:
+
+```typescript
+export default defineNuxtConfig({
+  modules: ['@lenne.tech/bug.lt'],
+  bug: {
+    ui: false, // kein @nuxt/ui / Tailwind v4 erforderlich
+    position: 'bottom-right',
+  },
+})
+```
+
+Damit lässt sich `bug.lt` z. B. in Projekten mit **Tailwind CSS v3** (`@nuxtjs/tailwindcss`) oder ganz ohne Tailwind einsetzen, ohne vorher auf `@nuxt/ui` / Tailwind v4 migrieren zu müssen.
+
+> Hinweis: Im eigenständigen Modus wird die Option `buttonIcon` nicht unterstützt (es ist kein Icon-Framework eingebunden). Ohne `buttonText` zeigt der Button das mitgelieferte Bug-Icon.
+
 ## Konfigurationsoptionen
 
 | Option                  | Typ       | Standard            | Beschreibung                                          |
 |-------------------------|-----------|---------------------|-------------------------------------------------------|
 | `enabled`               | `boolean` | `true`              | Komplettes Modul aktivieren                           |
-| `ui`                    | `boolean` | `true`              | @nuxt/ui Installation aktivieren                      |
+| `ui`                    | `boolean` | `true`              | `true`: nutzt @nuxt/ui · `false`: eigenständiger Modus ohne @nuxt/ui (siehe [UI-Modi](#ui-modi-nuxtui-vs-eigenständig)) |
 | `endpoint`              | `string`  | `'/_bug-lt/report'` | Server-Route für den Bug-Report (siehe Hinweis unten) |
 | `linearApiKey`          | `string`  | -                   | Linear API Key (erforderlich)                         |
 | `linearTeamName`        | `string`  | -                   | Linear Team Name oder Key                             |

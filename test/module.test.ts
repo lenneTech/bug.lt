@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { addComponent, addImports, addPlugin, addServerHandler, createResolver } from '@nuxt/kit'
+import { addComponent, addImports, addPlugin, addServerHandler, createResolver, installModule } from '@nuxt/kit'
 import module, { type ModuleOptions } from '../src/module'
 
 // Mock @nuxt/kit
@@ -73,10 +73,13 @@ describe('Bug LT Module', () => {
       },
     }
 
+    // setup() is called directly here, bypassing defineNuxtModule's default merge,
+    // so pass `ui: true` explicitly to mirror the resolved default option.
     const mockOptions: ModuleOptions = {
       linearApiKey: 'test-key',
       linearTeamName: 'Test Team',
       autoShow: true,
+      ui: true,
     }
 
     await module.setup(mockOptions, mockNuxt)
@@ -92,6 +95,46 @@ describe('Bug LT Module', () => {
     })
   })
 
+  it('should register self-contained components when ui is false', async () => {
+    const mockNuxt = {
+      options: {
+        runtimeConfig: {
+          public: { bugLt: {} },
+          bugLt: {},
+        },
+        modules: [],
+      },
+    }
+
+    // ui: false must register the standalone (no @nuxt/ui) variants and the
+    // standalone plugin/composable, and must NOT install @nuxt/ui (issue #5).
+    const mockOptions: ModuleOptions = { ui: false }
+
+    await module.setup(mockOptions, mockNuxt)
+
+    expect(installModule).not.toHaveBeenCalled()
+
+    expect(addComponent).toHaveBeenCalledWith({
+      name: 'BugReportButton',
+      filePath: './runtime/components/plain/BugReportButtonPlain.vue',
+    })
+
+    expect(addComponent).toHaveBeenCalledWith({
+      name: 'BugReportModal',
+      filePath: './runtime/components/plain/BugReportModalPlain.vue',
+    })
+
+    expect(addImports).toHaveBeenCalledWith({
+      name: 'useBugReport',
+      from: './runtime/composables/useBugReport.plain',
+    })
+
+    expect(addPlugin).toHaveBeenCalledWith({
+      src: './runtime/plugins/bug-lt.plain',
+      mode: 'client',
+    })
+  })
+
   it('should register composables correctly', async () => {
     const mockNuxt = {
       options: {
@@ -103,7 +146,8 @@ describe('Bug LT Module', () => {
       },
     }
 
-    const mockOptions: ModuleOptions = {}
+    // Pass `ui: true` explicitly to mirror the resolved default option.
+    const mockOptions: ModuleOptions = { ui: true }
 
     await module.setup(mockOptions, mockNuxt)
 
@@ -150,7 +194,8 @@ describe('Bug LT Module', () => {
       },
     }
 
-    const mockOptions: ModuleOptions = {}
+    // Pass `ui: true` explicitly to mirror the resolved default option.
+    const mockOptions: ModuleOptions = { ui: true }
 
     await module.setup(mockOptions, mockNuxt)
 

@@ -9,10 +9,17 @@ const sensitiveHeaders = ['authorization', 'cookie', 'set-cookie', 'x-api-key', 
 
 let isInitialized = false
 
-// Original fetch and XMLHttpRequest
-const originalFetch = window.fetch
-const originalXHROpen = XMLHttpRequest.prototype.open
-const originalXHRSend = XMLHttpRequest.prototype.send
+// Original fetch and XMLHttpRequest.
+// Captured lazily and SSR-safe: this module is part of the import graph of the
+// bug-report components/composable, which may be evaluated during SSR (e.g. when
+// `useBugReport()` or `<BugReportButton>` is used in a server-rendered page).
+// Reading `window`/`XMLHttpRequest` at module top level would crash in Node, so
+// guard the access. Monitoring is only ever wired up client-side
+// (`initializeNetworkMonitoring` bails out when `window` is undefined).
+const hasWindow = typeof window !== 'undefined'
+const originalFetch = hasWindow ? window.fetch : undefined
+const originalXHROpen = typeof XMLHttpRequest !== 'undefined' ? XMLHttpRequest.prototype.open : undefined
+const originalXHRSend = typeof XMLHttpRequest !== 'undefined' ? XMLHttpRequest.prototype.send : undefined
 
 // Helper to check if URL should be captured
 const shouldCaptureUrl = (url: string): boolean => {
@@ -98,7 +105,7 @@ export const initializeNetworkMonitoring = (): void => {
     const options = first instanceof Request ? first : args[1]
 
     if (!shouldCaptureUrl(url)) {
-      return originalFetch(...args)
+      return originalFetch!(...args)
     }
 
     const method = options?.method || 'GET'
@@ -120,7 +127,7 @@ export const initializeNetworkMonitoring = (): void => {
     }
 
     try {
-      const response = await originalFetch(...args)
+      const response = await originalFetch!(...args)
       const duration = Date.now() - startTime
 
       // Clone response to read body without consuming it
@@ -187,14 +194,14 @@ export const initializeNetworkMonitoring = (): void => {
       shouldCapture: shouldCaptureUrl(urlString),
     }
 
-    return originalXHROpen.call(this, method, url, ...rest)
+    return originalXHROpen!.call(this, method, url, ...rest)
   }
 
   XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
     const requestInfo = (this as any)._bugLtRequestInfo
 
     if (!requestInfo || !requestInfo.shouldCapture) {
-      return originalXHRSend.call(this, body)
+      return originalXHRSend!.call(this, body)
     }
 
     // Capture request headers
@@ -254,7 +261,7 @@ export const initializeNetworkMonitoring = (): void => {
       addToHistory(entry)
     })
 
-    return originalXHRSend.call(this, body)
+    return originalXHRSend!.call(this, body)
   }
 }
 
@@ -277,8 +284,8 @@ export const resetNetworkMonitoring = (): void => {
 
   // Restore original methods
   if (typeof window !== 'undefined') {
-    window.fetch = originalFetch
-    XMLHttpRequest.prototype.open = originalXHROpen
-    XMLHttpRequest.prototype.send = originalXHRSend
+    window.fetch = originalFetch!
+    XMLHttpRequest.prototype.open = originalXHROpen!
+    XMLHttpRequest.prototype.send = originalXHRSend!
   }
 }
