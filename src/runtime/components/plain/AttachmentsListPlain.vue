@@ -36,7 +36,7 @@ const formatFileSize = (bytes: number) => {
   return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
 }
 
-const generateId = () => Math.random().toString(36).substr(2, 9)
+const generateId = () => Math.random().toString(36).slice(2, 11)
 
 const processFiles = async (fileList: FileList) => {
   const newAttachments: AttachmentFile[] = []

@@ -235,7 +235,7 @@ Damit lässt sich `bug.lt` z. B. in Projekten mit **Tailwind CSS v3** (`@nuxtjs/
 | Option                  | Typ       | Standard            | Beschreibung                                          |
 |-------------------------|-----------|---------------------|-------------------------------------------------------|
 | `enabled`               | `boolean` | `true`              | Komplettes Modul aktivieren                           |
-| `ui`                    | `boolean` | `true`              | `true`: nutzt @nuxt/ui · `false`: eigenständiger Modus ohne @nuxt/ui (siehe [UI-Modi](#ui-modi-nuxtui-vs-eigenständig)) |
+| `ui`                    | `boolean` | `true`              | `true`: nutzt @nuxt/ui · `false`: eigenständiger Modus ohne @nuxt/ui (siehe Abschnitt „UI-Modi" oben) |
 | `endpoint`              | `string`  | `'/_bug-lt/report'` | Server-Route für den Bug-Report (siehe Hinweis unten) |
 | `linearApiKey`          | `string`  | -                   | Linear API Key (erforderlich)                         |
 | `linearTeamName`        | `string`  | -                   | Linear Team Name oder Key                             |

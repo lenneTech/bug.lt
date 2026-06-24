@@ -153,10 +153,14 @@ defineExpose({
   >
     <!-- Title -->
     <div class="buglt-field">
-      <label class="buglt-label">
+      <label
+        class="buglt-label"
+        for="buglt-title"
+      >
         Titel <span class="buglt-required">*</span>
       </label>
       <input
+        id="buglt-title"
         v-model="state.title"
         class="buglt-input"
         placeholder="Kurze Beschreibung des Problems"
@@ -166,10 +170,14 @@ defineExpose({
 
     <!-- Type -->
     <div class="buglt-field">
-      <label class="buglt-label">
+      <label
+        class="buglt-label"
+        for="buglt-type"
+      >
         Typ <span class="buglt-required">*</span>
       </label>
       <select
+        id="buglt-type"
         v-model="state.type"
         class="buglt-input"
         :disabled="isSubmitting"
@@ -192,10 +200,14 @@ defineExpose({
 
     <!-- Description -->
     <div class="buglt-field">
-      <label class="buglt-label">
+      <label
+        class="buglt-label"
+        for="buglt-description"
+      >
         Beschreibung <span class="buglt-required">*</span>
       </label>
       <textarea
+        id="buglt-description"
         v-model="state.description"
         class="buglt-input buglt-textarea"
         placeholder="Was ist passiert..."
@@ -206,8 +218,12 @@ defineExpose({
 
     <!-- Expected Behavior -->
     <div class="buglt-field">
-      <label class="buglt-label">Erwartetes Verhalten</label>
+      <label
+        class="buglt-label"
+        for="buglt-expected"
+      >Erwartetes Verhalten</label>
       <textarea
+        id="buglt-expected"
         v-model="state.expectedBehavior"
         class="buglt-input buglt-textarea"
         placeholder="Was hätten Sie erwartet?"
@@ -218,8 +234,12 @@ defineExpose({
 
     <!-- Steps to Reproduce -->
     <div class="buglt-field">
-      <label class="buglt-label">Schritte zur Reproduktion</label>
+      <label
+        class="buglt-label"
+        for="buglt-steps"
+      >Schritte zur Reproduktion</label>
       <textarea
+        id="buglt-steps"
         v-model="state.stepsToReproduce"
         class="buglt-input buglt-textarea"
         placeholder="1. Gehe zu... 2. Klicke auf... 3. Fehler erscheint"

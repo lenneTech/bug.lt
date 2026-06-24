@@ -96,6 +96,11 @@ describe('Bug LT Module', () => {
   })
 
   it('should register self-contained components when ui is false', async () => {
+    // Mocked @nuxt/kit helpers keep their call history across tests, and an
+    // earlier test calls setup() with `ui: true` (which installs @nuxt/ui).
+    // Reset so the `installModule` assertion below reflects only this test.
+    vi.clearAllMocks()
+
     const mockNuxt = {
       options: {
         runtimeConfig: {

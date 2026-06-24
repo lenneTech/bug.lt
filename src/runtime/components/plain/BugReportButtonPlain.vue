@@ -3,8 +3,8 @@ import { computed } from 'vue'
 import { useBugReport } from '../../composables/useBugReport.plain'
 import { captureScreenshot } from '../../utils/screenshot'
 import type { BugReportConfig } from '../../types'
-// @ts-expect-error - PNG asset import is resolved by the consumer's Vite build,
-// not by vue-tsc (no global asset type shim in this package).
+// Typed via the `*.png` module shim (src/shims.d.ts); resolved to the served
+// asset URL by the consumer's Vite build.
 import iconPng from '../../public/icon.png'
 import { useRuntimeConfig } from '#imports'
 
