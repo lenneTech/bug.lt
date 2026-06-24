@@ -87,6 +87,11 @@ const addToHistory = (entry: NetworkRequestEntry): void => {
 export const initializeNetworkMonitoring = (): void => {
   if (isInitialized || typeof window === 'undefined') return
 
+  // Bail out (without marking as initialized) if the primitives we intercept
+  // aren't available - e.g. a non-browser runtime or a polyfill that replaced
+  // them after this module was evaluated. Prevents throwing on interception.
+  if (!originalFetch || !originalXHROpen || !originalXHRSend) return
+
   isInitialized = true
 
   // Intercept fetch
@@ -105,7 +110,7 @@ export const initializeNetworkMonitoring = (): void => {
     const options = first instanceof Request ? first : args[1]
 
     if (!shouldCaptureUrl(url)) {
-      return originalFetch!(...args)
+      return originalFetch(...args)
     }
 
     const method = options?.method || 'GET'
@@ -127,7 +132,7 @@ export const initializeNetworkMonitoring = (): void => {
     }
 
     try {
-      const response = await originalFetch!(...args)
+      const response = await originalFetch(...args)
       const duration = Date.now() - startTime
 
       // Clone response to read body without consuming it
@@ -194,14 +199,14 @@ export const initializeNetworkMonitoring = (): void => {
       shouldCapture: shouldCaptureUrl(urlString),
     }
 
-    return originalXHROpen!.call(this, method, url, ...rest)
+    return originalXHROpen.call(this, method, url, ...rest)
   }
 
   XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
     const requestInfo = (this as any)._bugLtRequestInfo
 
     if (!requestInfo || !requestInfo.shouldCapture) {
-      return originalXHRSend!.call(this, body)
+      return originalXHRSend.call(this, body)
     }
 
     // Capture request headers
@@ -261,7 +266,7 @@ export const initializeNetworkMonitoring = (): void => {
       addToHistory(entry)
     })
 
-    return originalXHRSend!.call(this, body)
+    return originalXHRSend.call(this, body)
   }
 }
 
@@ -282,10 +287,13 @@ export const resetNetworkMonitoring = (): void => {
   clearNetworkRequests()
   isInitialized = false
 
-  // Restore original methods
-  if (typeof window !== 'undefined') {
-    window.fetch = originalFetch!
-    XMLHttpRequest.prototype.open = originalXHROpen!
-    XMLHttpRequest.prototype.send = originalXHRSend!
+  // Restore original methods - only when they were actually captured, so we
+  // never assign `undefined` or touch `XMLHttpRequest` when it's unavailable.
+  if (typeof window !== 'undefined' && originalFetch) {
+    window.fetch = originalFetch
+  }
+  if (typeof XMLHttpRequest !== 'undefined' && originalXHROpen && originalXHRSend) {
+    XMLHttpRequest.prototype.open = originalXHROpen
+    XMLHttpRequest.prototype.send = originalXHRSend
   }
 }

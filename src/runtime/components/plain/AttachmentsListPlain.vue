@@ -47,11 +47,22 @@ const processFiles = async (fileList: FileList) => {
       continue
     }
 
-    const dataUrl = await new Promise<string>((resolve) => {
-      const reader = new FileReader()
-      reader.onload = e => resolve(e.target?.result as string)
-      reader.readAsDataURL(file)
-    })
+    let dataUrl: string
+    try {
+      dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = e => resolve(e.target?.result as string)
+        // Without these the promise would hang on a read failure and block
+        // any further uploads. Reject so we can skip the offending file.
+        reader.onerror = () => reject(reader.error ?? new Error('FileReader error'))
+        reader.onabort = () => reject(new Error('FileReader aborted'))
+        reader.readAsDataURL(file)
+      })
+    }
+    catch (error) {
+      console.warn(`Failed to read file ${file.name}:`, error)
+      continue
+    }
 
     const attachment: AttachmentFile = {
       id: generateId(),
