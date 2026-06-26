@@ -9,10 +9,17 @@ const sensitiveHeaders = ['authorization', 'cookie', 'set-cookie', 'x-api-key', 
 
 let isInitialized = false
 
-// Original fetch and XMLHttpRequest
-const originalFetch = window.fetch
-const originalXHROpen = XMLHttpRequest.prototype.open
-const originalXHRSend = XMLHttpRequest.prototype.send
+// Original fetch and XMLHttpRequest.
+// Captured lazily and SSR-safe: this module is part of the import graph of the
+// bug-report components/composable, which may be evaluated during SSR (e.g. when
+// `useBugReport()` or `<BugReportButton>` is used in a server-rendered page).
+// Reading `window`/`XMLHttpRequest` at module top level would crash in Node, so
+// guard the access. Monitoring is only ever wired up client-side
+// (`initializeNetworkMonitoring` bails out when `window` is undefined).
+const hasWindow = typeof window !== 'undefined'
+const originalFetch = hasWindow ? window.fetch : undefined
+const originalXHROpen = typeof XMLHttpRequest !== 'undefined' ? XMLHttpRequest.prototype.open : undefined
+const originalXHRSend = typeof XMLHttpRequest !== 'undefined' ? XMLHttpRequest.prototype.send : undefined
 
 // Helper to check if URL should be captured
 const shouldCaptureUrl = (url: string): boolean => {
@@ -79,6 +86,11 @@ const addToHistory = (entry: NetworkRequestEntry): void => {
 // Initialize network request monitoring
 export const initializeNetworkMonitoring = (): void => {
   if (isInitialized || typeof window === 'undefined') return
+
+  // Bail out (without marking as initialized) if the primitives we intercept
+  // aren't available - e.g. a non-browser runtime or a polyfill that replaced
+  // them after this module was evaluated. Prevents throwing on interception.
+  if (!originalFetch || !originalXHROpen || !originalXHRSend) return
 
   isInitialized = true
 
@@ -275,9 +287,12 @@ export const resetNetworkMonitoring = (): void => {
   clearNetworkRequests()
   isInitialized = false
 
-  // Restore original methods
-  if (typeof window !== 'undefined') {
+  // Restore original methods - only when they were actually captured, so we
+  // never assign `undefined` or touch `XMLHttpRequest` when it's unavailable.
+  if (typeof window !== 'undefined' && originalFetch) {
     window.fetch = originalFetch
+  }
+  if (typeof XMLHttpRequest !== 'undefined' && originalXHROpen && originalXHRSend) {
     XMLHttpRequest.prototype.open = originalXHROpen
     XMLHttpRequest.prototype.send = originalXHRSend
   }
