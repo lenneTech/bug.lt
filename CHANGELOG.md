@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.9](https://github.com/lenneTech/bug.lt/compare/v1.6.8...v1.6.9) (2026-06-26)
+
+### 🐛 Bug Fixes
+
+* address PR review comments (SSR-safe monitoring, FileReader errors) ([d03de4e](https://github.com/lenneTech/bug.lt/commit/d03de4eb7c210181e70e199c90bf3e6f72c2ce90))
+* address second PR review round (a11y, asset typing, deprecations) ([6322bed](https://github.com/lenneTech/bug.lt/commit/6322bed2df012ac60d7934dcd57b4e675023d3c1))
+* self-contained ui:false mode without @nuxt/ui ([#5](https://github.com/lenneTech/bug.lt/issues/5)) ([b9f4a11](https://github.com/lenneTech/bug.lt/commit/b9f4a11cd1c6807e5897f7e1c9158350ca778447))
+
 ## [1.6.8](https://github.com/lenneTech/bug.lt/compare/v1.6.7...v1.6.8) (2026-06-17)
 
 ### 🐛 Bug Fixes
