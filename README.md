@@ -102,6 +102,44 @@ NUXT_LINEAR_TEAM_NAME=Entwicklung
 NUXT_LINEAR_PROJECT_NAME=Website
 ```
 
+#### Deployte Stages: `NUXT_BUG_LT_*` statt `.env`
+
+Der Weg oben funktioniert **nur lokal**. `process.env` in der
+`nuxt.config.ts` wird zur **Build-Zeit** ausgewertet, und ein Container-Build
+(Docker, CI) bekommt die Credentials dort typischerweise nicht — die Secrets
+werden erst zur **Laufzeit** injiziert. Das Modul landet damit unkonfiguriert
+im Image, und jeder Report antwortet
+`500 "Linear API is not configured. Please set linearApiKey."` — aber erst in
+dem Moment, in dem jemand einen Bug meldet. Bis dahin sieht alles gesund aus.
+
+Für deployte Stages werden die Credentials deshalb **nicht** in der
+`nuxt.config.ts` gesetzt, sondern direkt als Umgebungsvariablen der Stage.
+Nitro leitet sie automatisch aus dem Config-Pfad `runtimeConfig.bugLt` ab:
+
+```bash
+# Auf der Stage setzen (nicht im Build!)
+NUXT_BUG_LT_LINEAR_API_KEY=lin_api_...
+NUXT_BUG_LT_LINEAR_TEAM_NAME=Entwicklung
+NUXT_BUG_LT_LINEAR_PROJECT_NAME=Website
+```
+
+Der `bug:`-Block in der `nuxt.config.ts` bleibt dann ohne `linearApiKey` &
+Co. — die Werte kommen pro Request aus `runtimeConfig.bugLt`.
+
+Zwei Fallstricke, die in der Praxis Zeit gekostet haben:
+
+- **`enabled` ist ein Build-Time-Flag.** `enabled: process.env.IRGENDWAS !==
+  'production'` wertet im Container-Build gegen eine leere Variable aus und ist
+  damit immer `true`. Wer den Button pro Stage ein- und ausschalten will, nimmt
+  zur Laufzeit `NUXT_PUBLIC_BUG_LT_AUTO_SHOW=false` — das greift ohne Rebuild.
+- **Alte Variablennamen bleiben still liegen.** Wird ein Projekt von
+  `NUXT_LINEAR_*` auf `NUXT_BUG_LT_*` umgestellt, muss das auf **jeder** Stage
+  passieren. Eine Stage mit den alten Namen liest niemand mehr, meldet aber
+  auch nichts — sie antwortet nur den 500er oben.
+
+`NUXT_BUG_LT_LINEAR_API_KEY` ist ein Linear Personal Access Token mit
+Schreibrechten auf den gesamten Workspace. Auf jeder Stage als Secret ablegen.
+
 ## Verwendung
 
 ### Automatisch (empfohlen)
