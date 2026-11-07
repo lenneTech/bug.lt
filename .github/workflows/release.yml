@@ -8,16 +8,34 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Trusted Publishing (OIDC): @semantic-release/npm and npm exchange this run's GitHub OIDC token
+    # for a publish token that expires within minutes, instead of a long-lived NPM_TOKEN, and npm
+    # signs a provenance statement, because the repository is public. It needs the Trusted Publisher
+    # on npmjs.com: lenneTech / bug.lt / release.yml, no environment. Renaming this file breaks
+    # publishing until that entry is changed too. No NPM_TOKEN fallback: @semantic-release/npm would
+    # use it whenever the exchange fails and publish without provenance.
+    #
+    # Job-level `permissions` replaces the default token permissions. semantic-release runs with the
+    # job's own GITHUB_TOKEN (main is unprotected), as its GitHub Actions recipe does, instead of the
+    # GH_TOKEN personal token, which GitHub rejected as invalid (EINVALIDGHTOKEN) since 2026-09.
+    permissions:
+      contents: write # push the release commit and tag, create the GitHub release
+      issues: write # comment on released issues, open the failure issue
+      pull-requests: write # comment on released pull requests
+      id-token: write # request the OIDC token for npm Trusted Publishing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Node 24 instead of 22: OIDC needs npm >= 11.5.1. semantic-release publishes with the npm from
+      # node_modules (11.6.x), but Node 24's own npm qualifies too, so the publish does not depend on
+      # how the lockfile hoists npm.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
@@ -38,8 +56,6 @@ jobs:
       - name: Release
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}

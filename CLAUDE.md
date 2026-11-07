@@ -98,12 +98,12 @@ When working with Linear API:
 
 ## Release Process
 
-Automated via GitHub Actions on git tags. Release workflow:
-1. `npm version patch/minor/major`
-2. `git push origin --tags` 
-3. CI runs tests, builds, publishes to NPM, creates GitHub release
+Automated via semantic-release (`.github/workflows/release.yml`) on every push to `main`:
+1. Conventional commit types decide the version (`.releaserc.json`); `docs`, `chore`, `ci` and `test` do not release
+2. CI installs, builds, lints and tests
+3. semantic-release bumps the version, updates CHANGELOG.md, publishes to npm, commits `chore(release): … [skip ci]`, tags `v<version>` and creates the GitHub release
 
-Requires `NPM_TOKEN` secret in GitHub repository settings.
+Publishing uses npm Trusted Publishing (OIDC), no npm token secret: the Trusted Publisher on npmjs.com is `lenneTech / bug.lt / release.yml`. Renaming the workflow file breaks publishing until that entry is changed. See `.github/RELEASE_WORKFLOW.md`.
 
 ## Module Dependencies
 
