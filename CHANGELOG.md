@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/) and uses [Conventional Commits](https://conventionalcommits.org/).
 
+## [1.6.10](https://github.com/lenneTech/bug.lt/compare/v1.6.9...v1.6.10) (2026-11-09)
+
+### 🐛 Bug Fixes
+
+* **release:** publish with npm provenance via Trusted Publishing (OIDC) ([160f4d0](https://github.com/lenneTech/bug.lt/commit/160f4d04fd8023fcbfca3e49b425a55c96c3d554))
+
+### 📚 Documentation
+
+* Laufzeit-Env-Variablen für deployte Stages dokumentieren ([a779a27](https://github.com/lenneTech/bug.lt/commit/a779a2728e7963d8927af538afcc977cef2321a3))
+
+### 👷 CI/CD
+
+* publish via npm Trusted Publishing (OIDC) instead of NPM_TOKEN ([#7](https://github.com/lenneTech/bug.lt/issues/7)) [skip ci] ([f166c7e](https://github.com/lenneTech/bug.lt/commit/f166c7eafe9850e4534cdbbbfd6e72fdcf09c2e8))
+
 ## [1.6.9](https://github.com/lenneTech/bug.lt/compare/v1.6.8...v1.6.9) (2026-06-26)
 
 ### 🐛 Bug Fixes
