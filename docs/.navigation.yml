@@ -1,0 +1,4 @@
+# Section of this repository on docs.lennetech.app
+title: bug.lt
+icon: i-lucide-bug
+description: Nuxt 4 module for bug reports with screenshot, user journey and network context, filed as Linear issues.
